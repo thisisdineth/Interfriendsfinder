@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="video.css">
+    <title>Find a Guest | Video Chat</title>
+</head>
+<body>
+    <div id="header">
+        <img src="img/logo.png" alt="Logo" id="logo">
+        <div id="header-right">
+            <span id="local-time"></span>
+            <span id="active-users">Active Users: <span id="active-user-count">0</span></span>
+        </div>
+    </div>
+
+    <div id="video-chat-container">
+        <div id="video-box">
+            <div id="loading-container">Connecting to a stranger...</div>
+            <video id="remote-video" autoplay></video>
+        </div>
+        <div id="video-box">
+            <video id="local-video" autoplay muted></video>
+        </div>
+    </div>
+
+    <div id="controls">
+        <button id="find-new-user-btn">Find New Guest</button>
+        <button id="leave-chat-btn" disabled>Leave Chat</button>
+        <button id="toggle-video-btn" disabled>Turn Off Video</button>
+    </div>
+
+    <div id="status"></div>
+
+    <script type="module" src="video.js"></script>
+</body>
+</html>

@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta name="google-adsense-account" content="ca-pub-6219933128084510">
+    <meta charset="UTF-8">
+    <link rel="apple-touch-icon" sizes="180x180" href="/public/favicon/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/public/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/public/favicon/favicon-16x16.png">
+    <link rel="manifest" href="/public/favicon/site.webmanifest">
+    <meta name="msapplication-TileColor" content="#da532c">
+    <meta name="theme-color" content="#ffffff">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Find a Guest - About Us</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <header>
+        <nav>
+            <div class="logo">
+                <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhN1t_wtDJhUI4j-SEPMS9OlviAOPJqBtHL65rSHWa0JvuvgAL20-K7ymASxBQpVFhgmj7aBm37ef0QbtrwZ0UU2JdGjf_3L-50WL1GMY9qZtultbu2vmdLKKsvn40hW9ZNLVzU-tDpxPKntE2OMoEu2v-P4en53dpMOyr4XmdbYf_VTCy_dJvvFmdznxBo/w462-h462/logo.png"
+                    alt="Find a Guest Logo">
+            </div>
+            <ul>
+                <li><a href="https://strangerchat.online/">Home</a></li>
+                
+            </ul>
+        </nav>
+    </header>
+
+    <section id="hero">
+        <div class="hero-content">
+            <h1>Welcome to Find a Guest</h1>
+            <p>Connecting strangers anonymously for spontaneous, meaningful conversations.</p>
+            <a href="https://strangerchat.online/feedback" class="cta-button">FeedBack us !</a>
+        </div>
+    </section>
+
+    <section id="about">
+        <h2>About Us</h2>
+        <p>"Find a Guest" is an innovative web application designed to connect users with strangers for random, anonymous
+            chats. The app's primary goal is to facilitate social interactions in a respectful and secure environment.
+            Users can engage in text-based conversations, send voice messages, and explore various interactive features
+            to enhance their chatting experience. The application utilizes Firebase for real-time database management,
+            user authentication, and media storage, ensuring that the chat experience is both seamless and responsive.</p>
+    </section>
+
+    <section id="features">
+        <h2>Key Features</h2>
+        <ul>
+            <li><strong>Anonymous Chatting:</strong> Users can chat anonymously with strangers. This feature allows
+                individuals to connect without sharing personal information, fostering a safe environment for open
+                conversation.</li>
+            <li><strong>Real-Time Communication:</strong> The app uses Firebase's real-time database to manage active
+                users and chat messages. Messages are instantly updated in the chat interface, providing a smooth, live
+                chat experience.</li>
+            <li><strong>Voice Messaging:</strong> In addition to text messages, users can send voice messages. The app
+                includes options to record, listen, and send or cancel the voice message, mimicking popular messaging
+                platforms like WhatsApp.</li>
+            <li><strong>Message Controls:</strong> Users have control over their messages, with the ability to delete
+                their messages. Deleted messages are removed from both users' chat windows. Users can also reply to
+                specific messages, creating a nested conversation thread that adds context to ongoing discussions.</li>
+            <li><strong>Active User Monitoring:</strong> The app keeps track of the number of active users and displays
+                this count in real-time. This feature informs users about the current engagement on the platform.</li>
+            <li><strong>Chat Room Management:</strong> Chat rooms are dynamically created when two users are connected.
+                The app ensures that each user is matched with another random active user, enhancing the surprise element
+                of the chat. If a user decides to leave the chat, a system message is sent to the remaining user,
+                notifying them that the other participant has left.</li>
+            <li><strong>Typing Indicator:</strong> The app includes a typing indicator that alerts users when the other
+                person is typing. This feature makes the chat experience more interactive and dynamic.</li>
+            <li><strong>Responsive Design:</strong> The application is designed to be fully responsive, working
+                seamlessly across various devices, including desktops, tablets, and smartphones. The UI adjusts itself
+                according to the screen size, providing an optimal user experience.</li>
+        </ul>
+    </section>
+
+    <section id="architecture">
+        <h2>Technical Architecture</h2>
+        <ul>
+            <li><strong>Frontend:</strong>
+                <ul>
+                    <li><strong>HTML5 & CSS3:</strong> The app's structure and design are built using HTML5 and CSS3,
+                        ensuring a modern and responsive user interface.</li>
+                    <li><strong>JavaScript:</strong> The core logic for user interactions, voice message handling, and
+                        chat room management is implemented using JavaScript.</li>
+                </ul>
+            </li>
+            <li><strong>Backend:</strong>
+                <ul>
+                    <li><strong>Firebase Realtime Database:</strong> This is used to store and retrieve chat messages,
+                        manage active users, and handle chat room assignments in real time.</li>
+                    <li><strong>Firebase Authentication:</strong> Users are authenticated anonymously via Firebase,
+                        allowing them to participate in chats without requiring personal information or sign-up.</li>
+                    <li><strong>Firebase Storage:</strong> Voice messages are stored securely in Firebase storage,
+                        allowing users to send and receive audio clips during their chats.</li>
+                </ul>
+            </li>
+            <li><strong>Voice Message Handling:</strong>
+                <ul>
+                    <li>The app leverages the Web Audio API and MediaRecorder interface to capture and manage voice
+                        recordings. Users can record their voice, listen to the playback, and decide whether to send or
+                        cancel the recording. The audio data is then uploaded to Firebase storage and shared in the
+                        chat.</li>
+                </ul>
+            </li>
+            <li><strong>Event Handling:</strong>
+                <ul>
+                    <li><strong>Message Sending:</strong> Messages (both text and voice) are sent in real-time, with
+                        Firebase managing the backend to ensure all users in the chat room see the messages
+                        simultaneously.</li>
+                    <li><strong>User Disconnect:</strong> When a user leaves the chat, the app sends a notification to
+                        the remaining participant and handles the closure of the chat room.</li>
+                </ul>
+            </li>
+        </ul>
+    </section>
+
+    <section id="ux">
+        <h2>User Experience</h2>
+        <ul>
+            <li><strong>Starting a Chat:</strong> Upon accessing the app, users are automatically signed in anonymously
+                and added to the pool of active users. They can click a button to find a random user to chat with.</li>
+            <li><strong>Engaging in a Chat:</strong> Once matched, users can start a text conversation, reply to specific
+                messages, or send voice messages. The chat interface is designed to be intuitive, with easy-to-use
+                controls for managing the conversation.</li>
+            <li><strong>Voice Messaging:</strong> Users can initiate a voice message by clicking the "🎤" button, which
+                reveals controls for recording. They can stop the recording at any time, play it back, and either send or
+                cancel the message based on their preference.</li>
+            <li><strong>Leaving a Chat:</strong> If a user decides to leave the chat, they can click the "Leave the
+                Chat" button. The app notifies the other participant that the user has left, and the chat room is
+                closed.</li>
+            <li><strong>System Messages:</strong> The app uses system messages to inform users of key events, such as
+                when the other participant leaves the chat. These messages are clearly differentiated from regular user
+                messages.</li>
+        </ul>
+    </section>
+
+    <section id="security">
+        <h2>Security and Privacy</h2>
+        <ul>
+            <li><strong>Anonymous Authentication:</strong> The app uses Firebase’s anonymous authentication, which does
+                not require users to provide any personal information. This ensures that users remain completely
+                anonymous while using the app.</li>
+            <li><strong>Secure Storage:</strong> All user-generated content, including text messages and voice
+                recordings, is stored securely in Firebase. The app follows best practices for data security and privacy,
+                ensuring that all data is protected.</li>
+            <li><strong>No Data Retention:</strong> The app is designed for transient interactions. Once a chat ends and
+                the chat room is closed, the messages are removed, ensuring that conversations remain private and
+                ephemeral.</li>
+        </ul>
+    </section>
+
+    <section id="future">
+        <h2>Future Enhancements</h2>
+        <ul>
+            <li><strong>User Reporting and Moderation:</strong> Adding a feature that allows users to report
+                inappropriate behavior, ensuring that the platform remains safe and respectful.</li>
+            <li><strong>Text-to-Speech Integration:</strong> Integrating a feature that converts text messages to speech,
+                enhancing accessibility for users with disabilities.</li>
+            <li><strong>Multi-Language Support:</strong> Expanding the app to support multiple languages, making it
+                accessible to a broader global audience.</li>
+            <li><strong>User Preferences:</strong> Allowing users to set preferences, such as choosing a specific region
+                or interest for finding a chat partner.</li>
+        </ul>
+    </section>
+
+    <footer>
+        <p>&copy; 2024 Find a Guest. All rights reserved.</p>
+        <p>Created by Dineth Dilshan Gunawardana - <a href="https://www.linkedin.com/in/thisisdineth/">LinkedIn</a></p>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+
+</html>

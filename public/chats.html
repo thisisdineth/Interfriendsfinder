@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="apple-touch-icon" sizes="180x180" href="favicon/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="favicon/favicon-16x16.png">
+    <link rel="manifest" href="favicon/site.webmanifest">
+    <meta name="msapplication-TileColor" content="#da532c">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <meta name="theme-color" content="#ffffff">
+    <!-- Meta Keywords -->
+    <meta name="keywords" content="omegle, strangerchat, chatapp, dating app, find stranger chats,random chat, tinder">
+
+    <!-- Meta Description -->
+    <meta name="description"
+        content="This is Stranger Chat app called Find a Guest. You can simply find a person to chat, cure your boredom, and learn languages.
+
+    Find new people or you can find someone for a date! If you click the start chat button, you will automatically be redirected to the chat room, where you can find a guest to chat with by simply clicking on Find New One To Chat.">
+    <meta name="google-adsense-account" content="ca-pub-6219933128084510">
+    <!-- Open Graph Tags for Social Media -->
+    <meta property="og:title" content="Find a Guest">
+    <meta property="og:description"
+        content="This is Stranger Chat app called Find a Guest. You can simply find a person to chat, cure your boredom, and learn languages.">
+    <meta property="og:image" content="favicon/apple-touch-icon.png">
+    <meta property="og:url" content="https://findaguest.online">
+    <meta property="og:type" content="website">
+    <title>Find a Guest | Chat</title>
+    <link rel="stylesheet" href="chat.css">
+</head>
+
+<body>
+
+    <div id="header">
+        <div id="header-left">
+            <img src="img/logo.png" alt="Logo" id="logo">
+            <span id="active-users">Active <i class="fa fa-users" aria-hidden="true"></i> <span id="active-user-count">0</span></span>
+        </div>
+
+        <div id="header-right">
+            <span id="local-time"></span>
+        </div>
+    </div>
+
+    <div id="status">Keep In mind You are chatting with stranger, Talk more respectfully!</div>
+    <div id="chat-container">
+
+        <div id="chat-box"></div>
+        <div id="typing-indicator"></div>
+
+    </div>
+    <div id="chat-input-container">
+        <input type="text" id="chat-input" placeholder="You: Type a message...">
+        <button id="send-btn"><i class="fa fa-paper-plane" aria-hidden="true"></i></button>
+        
+    </div>
+
+    <div id="controls">
+        <button id="new-chat-btn">Find New One  <i class="fa fa-users" aria-hidden="true"></i></button>
+        <button id="skip-btn">Leave  <i class="fa fa-sign-out" aria-hidden="true"></i></button>
+    </div>
+
+    <script type="module" src="chat.js"></script>
+
+</body>
+<footer>
+    <p class="ptext"> &copy; 2024 findaguest.online | by Dineth Gunawardana</p>
+</footer>
+
+</html>

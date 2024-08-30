@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="apple-touch-icon" sizes="180x180" href="favicon/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="favicon/favicon-16x16.png">
+    <link rel="manifest" href="favicon/site.webmanifest">
+    <meta name="msapplication-TileColor" content="#da532c">
+    <meta name="theme-color" content="#ffffff">
+    <!-- Meta Keywords -->
+    <meta name="keywords" content="omegle, strangerchat, chatapp, dating app, find stranger chats,random chat, tinder">
+    <meta name="google-adsense-account" content="ca-pub-6219933128084510">
+    <!-- Meta Description -->
+    <meta name="description"
+        content="This is Stranger Chat app called Find a Guest. You can simply find a person to chat, cure your boredom, and learn languages.
+
+    Find new people or you can find someone for a date! If you click the start chat button, you will automatically be redirected to the chat room, where you can find a guest to chat with by simply clicking on Find New One To Chat.">
+
+    <!-- Open Graph Tags for Social Media -->
+    <meta property="og:title" content="Find a Guest">
+    <meta property="og:description"
+        content="This is Stranger Chat app called Find a Guest. You can simply find a person to chat, cure your boredom, and learn languages.">
+    <meta property="og:image" content="favicon/apple-touch-icon.png">
+    <meta property="og:url" content="https://findaguest.online">
+    <meta property="og:type" content="website">
+
+    <title>Find a Guest</title>
+    <style>
+        /* Ensure the website fits within the viewport without horizontal scrolling */
+        html,
+        body {
+            max-width: 100%;
+            overflow-x: hidden;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        *,
+        *::before,
+        *::after {
+            box-sizing: inherit;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background-color: #3a3f47;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            text-align: center;
+            color: #333;
+        }
+
+        #header,
+        #content,
+        #footer {
+            width: 100%;
+            overflow-x: hidden;
+        }
+
+        #header {
+            width: 100%;
+            padding: 20px;
+            background-color: #282c34;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            color: wheat;
+            transition: all 0.3s ease;
+        }
+
+        #header:hover {
+            background-color: #1c1f24;
+        }
+
+        #logo {
+            height: 60px;
+        }
+
+        #site-title {
+            font-size: 32px;
+            font-weight: 700;
+            margin-left: 15px;
+            color: #fbe161;
+            transition: color 0.3s ease;
+        }
+
+        #site-title:hover {
+            color: #f18c21;
+        }
+
+        #header-content {
+            display: flex;
+            align-items: center;
+        }
+
+        #menu {
+            display: flex;
+            gap: 20px;
+        }
+
+        #menu a {
+            color: #61dafb;
+            text-decoration: none;
+            font-size: 18px;
+            font-weight: bold;
+            transition: color 0.3s ease;
+        }
+
+        #menu a:hover {
+            color: #21a1f1;
+        }
+
+        #live-users {
+            font-size: 20px;
+            font-weight: bold;
+            color: #61dafb;
+            transition: color 0.3s ease;
+            margin-right: 20px;
+        }
+
+        #live-users:hover {
+            color: #21a1f1;
+        }
+
+        #translate-btn {
+            padding: 10px 20px;
+            font-size: 16px;
+            color: black;
+            background-color: #fba661;
+            border: none;
+            border-radius: 5px;
+            text-align: right;
+            cursor: pointer;
+            text-transform: uppercase;
+            transition: all 0.3s ease;
+        }
+
+        #translate-btn:hover {
+            background-color: #f18221;
+        }
+
+        #start-chat-section {
+            margin: 30px;
+            padding: 30px;
+            background-color: #32353a;
+            border-radius: 15px;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+            transition: box-shadow 0.3s ease;
+        }
+
+        #start-chat-section:hover {
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+        }
+
+        #start-chat-btn {
+            display: inline-block;
+            padding: 15px 40px;
+            font-size: 18px;
+            font-weight: bold;
+            color: #1c1f24;
+            background-color: #61fbb6;
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+            text-transform: uppercase;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 10px rgba(9, 188, 54, 0.5);
+            margin-right: 10px;
+        }
+
+        #start-chat-btn:hover {
+            background-color: #5aff23;
+            box-shadow: 0 6px 15px rgba(69, 252, 33, 0.6);
+            transform: translateY(-2px);
+        }
+
+        a {
+            color: white;
+            text-decoration: none;
+            gap: 5px;
+        }
+
+        #content {
+            margin: 10px;
+            padding: 20px;
+            max-width: 100%;
+            background-color: #dde0e3;
+            color: rgb(0, 0, 0);
+            border-radius: 15px;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+            transition: box-shadow 0.3s ease;
+        }
+
+        #content:hover {
+            box-shadow: 0 8px 30px rgba(125, 125, 125, 0.15);
+        }
+
+        #policies h2,
+        #content h1 {
+            color: #282c34;
+            margin-bottom: 15px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            border-radius: 7px;
+        }
+
+        th,
+        td {
+            padding: 12px;
+            border: 1px solid #dddddd;
+            text-align: left;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        footer {
+            background-color: #282c34;
+            color: #ffffff;
+            padding: 20px;
+            width: 100%;
+            text-align: center;
+            font-size: 14px;
+            position: relative;
+        }
+
+        @media only screen and (max-width: 600px) {
+            #header {
+                flex-direction: column;
+                padding: 15px;
+            }
+
+            #logo {
+                height: 50px;
+            }
+
+            #site-title {
+                font-size: 28px;
+                margin-left: 0;
+                margin-top: 10px;
+            }
+
+            #live-users,
+            #menu a {
+                font-size: 16px;
+            }
+
+            #translate-btn {
+                padding: 8px 15px;
+                font-size: 14px;
+                margin-top: 8px;
+                color: black;
+            }
+
+            #start-chat-section {
+                margin: 15px;
+                padding: 20px;
+            }
+
+            #start-chat-btn {
+                padding: 12px 30px;
+                font-size: 16px;
+                margin-right: 5px;
+                margin-top: 15px;
+            }
+
+            footer {
+                font-size: 12px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header id="header">
+        <div id="header-content">
+            <img id="logo" src="img/logo.png" alt="Stranger Chat Logo">
+            <div id="site-title">Find a Guest</div>
+        </div>
+        <div id="live-users">Live Users: <span id="active-user-count">0</span></div>
+        <nav id="menu">
+            <button id="translate-btn" onclick="window.location.href='https://strangerchat.online/about/'">About</button>
+            <button id="translate-btn" onclick="window.location.href='https://blog.strangerchat.online'">Blog</button>
+        </nav>
+    </header>
+    <div id="start-chat-section">
+        <button id="start-chat-btn">Text Chat 💬</button>
+        <button id="start-chat-btn" onclick="window.location.href='voice.html'">Voice Chat 🎙️</button>
+        <button id="start-chat-btn" onclick="window.location.href='video.html'">Video Chat 📸</button>
+
+    </div>
+
+    <div id="content">
+        <div id="policies">
+            <h2>Chat Rules to follow!</h2>
+            <p>• Age must be 13 years or older.</p>
+            <p>• No inappropriate content, hate speech, or harassment.</p>
+            <p>• Respect others' privacy and safety.</p>
+            <p>• No sexting or flirting without other person's permission.</p>
+        </div>
+        <div id="policies">
+            <h2>How to use?</h2>
+            <ul>
+                <li>
+                    <p>This is Stranger Chat app called Find a Guest. You can simply find a person to chat, cure your
+                        boredom, and learn languages.</p>
+                </li>
+                <li>
+                    <p>Find new people or you can find someone for a date! If you click the <b>start chat</b> button,
+                        you will automatically be redirected to the chat room, where you can find a guest to chat with
+                        by simply clicking on <b>Find New One To Chat</b>.</p>
+                </li>
+                <li>
+                    <p>If that person is not suitable for you or not matching your vibe, simply click <b>Leave The
+                            Chat</b>, then click again <b>Find new one to chat</b> to connect with a new person. There
+                        are also more chat options (Tag a message and reply, delete message).</p>
+                </li>
+                <hr>
+                <p>Do You know?<br>
+                    In this stranger chat app, no one can see your personal data, not even your Name. <b>All the
+                        messages you send will disappear after you leave the chat, from both users' screens.</b>
+                </p>
+            </ul>
+            <hr>
+            <center>
+                <h2>Upcoming Features</h2>
+
+                <table>
+                    <tr>
+                        <th>Features</th>
+                        <th>Active Date</th>
+                        <th>Status</th>
+                    </tr>
+                    <tr>
+                        <td>Send Voice Message</td>
+                        <td>Beta</td>
+                        <td>✅</td>
+                    </tr>
+                    <tr>
+                        <td>Delete and tag messages</td>
+                        <td></td>
+                        <td>✅</td>
+                    </tr>
+                    <tr>
+                        <td>Video Chat</td>
+                        <td>Beta</td>
+                        <td>✅</td>
+                    </tr>
+                    <tr>
+                        <td>Blocking Users</td>
+                        <td></td>
+                        <td>🚫</td>
+                    </tr>
+                </table>
+            </center>
+        </div>
+    </div>
+
+    <footer>
+        &copy; findaguest.online All right received<br>
+        <a href="https://strangerchat.online/privacy/">Privacy policies</a> |
+        <a href="https://strangerchat.online/feedback/">User feedback</a>
+    </footer>
+
+    <!-- Firebase scripts -->
+    <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-database.js"></script>
+    <script type="module" src="chat.js"></script>
+    <!-- Update user count on page load -->
+    <script>
+        // Function to fetch live user count from chat.js
+        function updateUserCount() {
+            const userCountElement = document.getElementById('active-user-count');
+            if (typeof window.updateActiveUsersCount === 'function') {
+                window.updateActiveUsersCount().then(activeUsers => {
+                    userCountElement.textContent = activeUsers;
+                });
+            } else {
+                console.error('updateActiveUsersCount function not found in chat.js');
+            }
+        }
+
+        // Call the function to update user count on page load
+        window.onload = updateUserCount;
+
+        // Add event listener to the Start Chat button
+        document.addEventListener('DOMContentLoaded', () => {
+            const startChatBtn = document.getElementById('start-chat-btn');
+            startChatBtn.addEventListener('click', () => {
+                window.location.href = 'chats.html';
+            });
+        });
+    </script>
+</body>
+
+</html>
