@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tweet | EduConnect</title>
+    <link rel="stylesheet" href="tweet.css">
+</head>
+<body>
+    <header>
+        <div class="logo-container">
+            <img src="img/logo.png" alt="EduConnect Logo" class="logo">
+            <h1 class="app-name">EduConnect</h1>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="profile.html">Profile</a></li>
+                <li><a id="signout-btn">Sign Out</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <div class="container">
+        <div class="tweet-container" id="tweet-container">
+            <!-- Tweet content will be dynamically loaded here -->
+        </div>
+
+        <div class="reply-form">
+            <textarea id="new-reply" placeholder="Reply to this tweet..." rows="3"></textarea>
+            <button id="post-reply-btn">Reply</button>
+        </div>
+
+        <div class="replies-container" id="replies-container">
+            <!-- Replies will be dynamically loaded here -->
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2024 EduConnect. All rights reserved.</p>
+    </footer>
+
+    <script type="module" src="tweet.js"></script>
+</body>
+</html>

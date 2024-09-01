@@ -1,0 +1,260 @@
+body {
+    font-family: Arial, sans-serif;
+    background: linear-gradient(to right, #e1fcff, #f6fefe);
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+}
+
+header {
+    background: #ffffff;
+    color: rgb(0, 0, 0);
+    padding: 20px;
+    text-align: center;
+    position: relative;
+}
+
+.logo-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+}
+
+.logo {
+    height: 50px;
+    width: auto;
+}
+
+.app-name {
+    font-size: 2em;
+    margin: 0;
+}
+
+#switch-btn {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background: #cff3ff;
+    border: 1px solid black;
+    border-radius: 4px;
+    color: rgb(0, 0, 0);
+    cursor: pointer;
+    padding: 10px;
+    transition: background 0.3s ease, transform 0.3s ease;
+}
+
+#switch-btn:hover {
+    background: #aef1ed;
+}
+
+#switch-btn:active {
+    transform: scale(0.98);
+}
+
+/* Mobile-specific styles */
+@media (max-width: 600px) {
+    header {
+        padding: 10px;
+        text-align: center;
+    }
+
+    #switch-btn {
+        position: static; /* Move the button from absolute to static positioning */
+        margin-top: 20px; /* Space above the switch button */
+        margin-bottom: 20px; /* Space below the switch button */
+    }
+
+    #auth-section {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .form-container {
+        width: 90%;
+    }
+
+    .image-container {
+        width: 90%;
+    }
+}
+
+.container {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+#auth-section {
+    display: flex;
+    width: 100%;
+    max-width: 1200px;
+    position: relative;
+}
+
+.form-container {
+    width: 45%;
+    display: none;
+    padding: 20px;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+#signup-container {
+    display: block;
+}
+
+h2 {
+    color: #000000;
+    font-size: 1.5em;
+    margin: 0 0 20px 0;
+    text-align: center;
+    transition: color 0.3s ease;
+}
+
+h2:hover {
+    color: #767272;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    width: 100%;
+}
+
+input {
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 10px;
+    font-size: 1em;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+input:focus {
+    border-color: #ed0404;
+    box-shadow: 0 0 5px rgba(0, 150, 136, 0.3);
+    outline: none;
+}
+
+button {
+    background: #ebe7e7;
+    border: 1px;
+    border-radius: 4px;
+    color: rgb(0, 0, 0);
+    cursor: pointer;
+    font-size: 1em;
+    padding: 10px;
+    transition: background 0.3s ease, transform 0.3s ease;
+}
+
+button:hover {
+    background: #acf5ed;
+}
+
+button:active {
+    transform: scale(0.98);
+}
+
+/* Specific styles for social buttons */
+#google-signup,
+#google-signin,
+#facebook-signup,
+#facebook-signin {
+    color: black;
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 10px;
+    transition: background 0.3s ease, border-color 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#google-signup img,
+#google-signin img,
+#facebook-signup img,
+#facebook-signin img {
+    width: 30px;
+    height: 30px;
+    margin-right: 10px;
+}
+
+#google-signup:hover,
+#google-signin:hover,
+#facebook-signup:hover,
+#facebook-signin:hover {
+    background: #f0f0f0; /* Light gray color for hover effect */
+    border-color: #ccc;
+}
+
+footer {
+    background: #144e60;
+    color: white;
+    text-align: center;
+    padding: 10px;
+    position: relative;
+    bottom: 0;
+}
+
+.image-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 45%;
+    padding: 20px;
+}
+
+.auth-image {
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+}
+
+/* Loading Icon Styles */
+.loading-icon {
+    text-align: center;
+    margin-top: 15px;
+}
+
+.loading-icon img {
+    width: 30px;
+    height: 30px;
+}
+
+/* Message Styles */
+.message {
+    text-align: center;
+    margin-top: 15px;
+    font-size: 1em;
+}
+
+.message.success {
+    color: green;
+}
+
+.message.error {
+    color: red;
+}
+
+/* Media Query for Smaller Screens */
+@media (max-width: 600px) {
+    #auth-section {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .form-container {
+        width: 90%;
+    }
+
+    .image-container {
+        width: 90%;
+    }
+}
