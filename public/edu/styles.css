@@ -332,4 +332,7 @@ nav ul li a:hover {
     .tweet-form, .tweets-container {
         padding: 10px;
     }
+    .logo{
+        display: none;
+    }
 }
