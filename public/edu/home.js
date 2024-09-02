@@ -102,9 +102,13 @@ const renderTweet = (tweetId, tweetData) => {
             <button class="like-btn" data-id="${tweetId}" data-liked-by="${tweetData.likedBy?.includes(auth.currentUser?.uid) ? 'true' : 'false'}">
                 <i class="fa fa-thumbs-up"></i> Like <span class="like-count">${tweetData.likes}</span>
             </button>
-            <button class="load-replies-btn" data-id="${tweetId}">Load Replies</button>
+            <button class="load-replies-btn" data-id="${tweetId}">Load Replies (0)</button>
         </div>
-        <div class="replies-container" id="replies-${tweetId}"></div>
+        <div class="reply-box" style="display: none;">
+            <textarea class="reply-input" placeholder="Write a reply..."></textarea>
+            <button class="submit-reply-btn" data-id="${tweetId}">Submit Reply</button>
+        </div>
+        <div class="replies-container" id="replies-${tweetId}" style="display: none;"></div>
     `;
 
     tweetsContainer.appendChild(tweetElement);
@@ -160,35 +164,38 @@ const addTweetEventListeners = (tweetElement, tweetId) => {
 
     // Reply button
     tweetElement.querySelector('.reply-btn')?.addEventListener('click', () => {
-        const replyAuthor = tweetElement.querySelector('.reply-btn').dataset.author;
-        const replyContent = prompt(`Replying to ${replyAuthor}:`);
-        if (replyContent && replyContent.trim() !== "") {
-            postReply(tweetId, replyContent, replyAuthor);
+        const replyBox = tweetElement.querySelector('.reply-box');
+        replyBox.style.display = replyBox.style.display === 'none' ? 'block' : 'none';
+    });
+
+    // Submit reply button
+    tweetElement.querySelector('.submit-reply-btn')?.addEventListener('click', async () => {
+        const replyInput = tweetElement.querySelector('.reply-input');
+        const replyContent = replyInput.value.trim();
+        if (replyContent === "") return;
+
+        const user = auth.currentUser;
+        if (user) {
+            const userRef = ref(db, `users/${user.uid}`);
+            const userData = (await get(userRef)).val();
+
+            const replyRef = ref(db, `replies/${tweetId}`);
+            const newReply = {
+                content: `${replyContent}`,
+                author: `${userData.name} (${userData.role})`,
+                username: userData.username,
+                bio: userData.bio,
+                userId: user.uid,
+                timestamp: new Date().toISOString(),
+                likes: 0,
+                likedBy: []  // Array to store user IDs who liked the reply
+            };
+
+            await push(replyRef, newReply);
+            replyInput.value = ""; // Clear reply input after submitting
+            loadReplyCount(tweetId, tweetElement); // Update reply count
         }
     });
-};
-
-// Function to post a reply
-const postReply = async (tweetId, content, replyAuthor) => {
-    const user = auth.currentUser;
-    if (user) {
-        const userRef = ref(db, `users/${user.uid}`);
-        const userData = (await get(userRef)).val();
-
-        const replyRef = ref(db, `replies/${tweetId}`);
-        const newReply = {
-            content: `${content}`,
-            author: `${userData.name} (${userData.role})`,
-            username: userData.username,
-            bio: userData.bio,
-            userId: user.uid,
-            timestamp: new Date().toISOString(),
-            likes: 0,
-            likedBy: []  // Array to store user IDs who liked the reply
-        };
-
-        await push(replyRef, newReply);
-    }
 };
 
 // Function to load replies for a specific tweet
@@ -227,11 +234,8 @@ const loadReplies = (tweetId, container) => {
 
         document.querySelectorAll('.reply-btn').forEach(button => {
             button.addEventListener('click', () => {
-                const replyAuthor = button.dataset.author;
-                const replyContent = prompt(`Replying to ${replyAuthor}:`);
-                if (replyContent && replyContent.trim() !== "") {
-                    postReply(tweetId, replyContent, replyAuthor);
-                }
+                const replyBox = button.closest('.tweet').querySelector('.reply-box');
+                replyBox.style.display = replyBox.style.display === 'none' ? 'block' : 'none';
             });
         });
 
@@ -262,6 +266,16 @@ const loadReplies = (tweetId, container) => {
                 }
             });
         });
+    });
+};
+
+// Function to load reply count
+const loadReplyCount = (tweetId, tweetElement) => {
+    const repliesRef = ref(db, `replies/${tweetId}`);
+    onValue(repliesRef, (snapshot) => {
+        const replyCount = snapshot.size;
+        const loadRepliesBtn = tweetElement.querySelector('.load-replies-btn');
+        loadRepliesBtn.textContent = `Load Replies (${replyCount})`;
     });
 };
 
