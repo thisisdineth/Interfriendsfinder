@@ -155,6 +155,7 @@ const loadUserTweets = async (user) => {
                 if (tweetData.userId === user.uid) {
                     const tweetElement = createTweetElement(childSnapshot.key, tweetData);
                     userTweetsContainer.appendChild(tweetElement);
+                    loadRepliesForTweet(childSnapshot.key);  // Load replies for this tweet
                 }
             });
         });
@@ -163,26 +164,21 @@ const loadUserTweets = async (user) => {
     }
 };
 
-// Load replies to user's tweets
-const loadUserReplies = async (user) => {
+// Load replies for a specific tweet
+const loadRepliesForTweet = async (tweetId) => {
     try {
-        const repliesRef = ref(db, 'replies/');
+        const repliesRef = ref(db, `replies/${tweetId}`);
         onValue(repliesRef, (snapshot) => {
-            userRepliesContainer.innerHTML = "";
             snapshot.forEach((childSnapshot) => {
                 const replyData = childSnapshot.val();
-                const tweetRef = ref(db, `tweets/${childSnapshot.key}`);
-                get(tweetRef).then((tweetSnapshot) => {
-                    const tweetData = tweetSnapshot.val();
-                    if (tweetData && tweetData.userId === user.uid) {
-                        const replyElement = createReplyElement(childSnapshot.key, replyData);
-                        userRepliesContainer.appendChild(replyElement);
-                    }
-                });
+                if (replyData) {
+                    const replyElement = createReplyElement(childSnapshot.key, replyData);
+                    userRepliesContainer.appendChild(replyElement);
+                }
             });
         });
     } catch (error) {
-        console.error('Error loading user replies:', error);
+        console.error('Error loading replies:', error);
     }
 };
 
@@ -247,7 +243,6 @@ onAuthStateChanged(auth, (user) => {
     if (user) {
         loadUserProfile(user);
         loadUserTweets(user);
-        loadUserReplies(user);
     } else {
         window.location.href = "signpage.html";
     }
