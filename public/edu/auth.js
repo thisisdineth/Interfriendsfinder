@@ -1,44 +1,101 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signInWithPopup, GoogleAuthProvider, FacebookAuthProvider } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signInWithPopup, GoogleAuthProvider } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
 import { getDatabase, ref, set } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-database.js";
+import { getStorage, ref as storageRef, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-storage.js";
 
-// Initialize Firebase
+// Firebase configuration
 const firebaseConfig = {
     apiKey: "AIzaSyDSU4RsY5zeQICARv6WUANKtgRoj17qhEo",
     authDomain: "edudb-4ce31.firebaseapp.com",
     projectId: "edudb-4ce31",
     storageBucket: "edudb-4ce31.appspot.com",
     messagingSenderId: "5542930290",
-    appId: "1:5542930290:web:c038e21d164b6b60779feb"
+    appId: "1:5542930290:web:c038e21d164b6b60779feb",
+    databaseURL: "https://edudb-4ce31-default-rtdb.asia-southeast1.firebasedatabase.app/"
 };
 
+// Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getDatabase(app);
+const storage = getStorage(app);
 
 // Sign Up Function
 document.getElementById('signup-form').addEventListener('submit', async (e) => {
     e.preventDefault();
+
     const name = document.getElementById('signup-name').value;
     const username = document.getElementById('signup-username').value;
     const email = document.getElementById('signup-email').value;
     const password = document.getElementById('signup-password').value;
+    const role = document.querySelector('input[name="role"]:checked').value;
+    const bio = document.getElementById('signup-bio').value;
+    const photoFile = document.getElementById('signup-photo').files[0];
 
     try {
         const userCredential = await createUserWithEmailAndPassword(auth, email, password);
         const user = userCredential.user;
 
-        // Save additional user data in the database
+        let photoURL = "";
+        if (photoFile && photoFile.size <= 2 * 1024 * 1024) { // Check if file size is within 2MB
+            const storagePath = `profilePictures/${user.uid}/${photoFile.name}`;
+            const imageRef = storageRef(storage, storagePath);
+            await uploadBytes(imageRef, photoFile);
+            photoURL = await getDownloadURL(imageRef);
+        }
+
+        // Save user data in the database
         await set(ref(db, 'users/' + user.uid), {
             name: name,
             username: username,
-            email: email
+            email: email,
+            role: role,
+            bio: bio,
+            photoURL: photoURL
         });
 
         alert("Sign Up Successful!");
         window.location.href = "index.html"; // Redirect to the main page after sign-up
     } catch (error) {
         console.error("Sign Up Error: ", error.message);
+    }
+});
+
+// Google Sign Up / Sign In
+const googleProvider = new GoogleAuthProvider();
+
+document.getElementById('google-signup').addEventListener('click', async () => {
+    try {
+        const result = await signInWithPopup(auth, googleProvider);
+        const user = result.user;
+
+        const userRef = ref(db, 'users/' + user.uid);
+        const snapshot = await get(userRef);
+
+        // If the user is signing up for the first time, ask for additional information
+        if (!snapshot.exists()) {
+            const name = prompt("Please enter your full name:");
+            const username = prompt("Please choose a username:");
+            const role = confirm("Are you a teacher? Click OK for yes, Cancel for no.") ? "teacher" : "student";
+            const bio = prompt("Tell us a little about yourself (minimum 2 characters):");
+
+            await set(userRef, {
+                name: name,
+                username: username,
+                email: user.email,
+                role: role,
+                bio: bio,
+                photoURL: user.photoURL || ""
+            });
+
+            alert("Sign Up Successful!");
+            window.location.href = "index.html";
+        } else {
+            alert("Sign In Successful!");
+            window.location.href = "index.html"; // Redirect to the main page after sign-in
+        }
+    } catch (error) {
+        console.error("Google Sign Up/In Error: ", error.message);
     }
 });
 
@@ -49,57 +106,13 @@ document.getElementById('signin-form').addEventListener('submit', async (e) => {
     const password = document.getElementById('signin-password').value;
 
     try {
-        // Here, we'll assume users might input either username or email
-        let signInMethod = signInWithEmailAndPassword(auth, usernameOrEmail, password);
-
-        if (usernameOrEmail.includes("@")) {
-            signInMethod = signInWithEmailAndPassword(auth, usernameOrEmail, password);
-        } else {
-            // Fetch email based on username from the database
-            const snapshot = await get(ref(db, `usernames/${usernameOrEmail}`));
-            const email = snapshot.val();
-            signInMethod = signInWithEmailAndPassword(auth, email, password);
-        }
-
-        await signInMethod;
+        await signInWithEmailAndPassword(auth, usernameOrEmail, password);
         alert("Sign In Successful!");
         window.location.href = "index.html"; // Redirect to the main page after sign-in
     } catch (error) {
         console.error("Sign In Error: ", error.message);
     }
 });
-
-// Sign Up/Sign In with Google
-const googleProvider = new GoogleAuthProvider();
-
-document.getElementById('google-signup').addEventListener('click', () => signInWithPopup(auth, googleProvider).then((result) => {
-    // Add user to the database if they signed up using Google
-    set(ref(db, 'users/' + result.user.uid), {
-        name: result.user.displayName,
-        email: result.user.email
-    });
-    window.location.href = "index.html";
-}).catch((error) => console.error("Google Sign Up Error: ", error.message)));
-
-document.getElementById('google-signin').addEventListener('click', () => signInWithPopup(auth, googleProvider).then(() => {
-    window.location.href = "index.html";
-}).catch((error) => console.error("Google Sign In Error: ", error.message)));
-
-// Sign Up/Sign In with Facebook
-const facebookProvider = new FacebookAuthProvider();
-
-document.getElementById('facebook-signup').addEventListener('click', () => signInWithPopup(auth, facebookProvider).then((result) => {
-    // Add user to the database if they signed up using Facebook
-    set(ref(db, 'users/' + result.user.uid), {
-        name: result.user.displayName,
-        email: result.user.email
-    });
-    window.location.href = "index.html";
-}).catch((error) => console.error("Facebook Sign Up Error: ", error.message)));
-
-document.getElementById('facebook-signin').addEventListener('click', () => signInWithPopup(auth, facebookProvider).then(() => {
-    window.location.href = "index.html";
-}).catch((error) => console.error("Facebook Sign In Error: ", error.message)));
 
 // Auth State Change Listener
 onAuthStateChanged(auth, (user) => {

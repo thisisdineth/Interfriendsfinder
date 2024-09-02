@@ -4,10 +4,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="apple-touch-icon" sizes="180x180" href="favicon/apple-touch-icon.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="favicon/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="favicon/favicon-16x16.png">
-    <link rel="manifest" href="favicon/site.webmanifest">
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="manifest" href="/site.webmanifest">
     <meta name="msapplication-TileColor" content="#da532c">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <meta name="theme-color" content="#ffffff">
@@ -30,13 +30,13 @@
     <title>Find a Guest | Chat</title>
     <link rel="stylesheet" href="chat.css">
 </head>
-
 <body>
 
     <div id="header">
         <div id="header-left">
             <img src="img/logo.png" alt="Logo" id="logo">
-            <span id="active-users">Active <i class="fa fa-users" aria-hidden="true"></i> <span id="active-user-count">0</span></span>
+            <span id="active-users">Active <i class="fa fa-users" aria-hidden="true"></i> <span
+                    id="active-user-count">0</span></span>
         </div>
 
         <div id="header-right">
@@ -54,19 +54,28 @@
     <div id="chat-input-container">
         <input type="text" id="chat-input" placeholder="You: Type a message...">
         <button id="send-btn"><i class="fa fa-paper-plane" aria-hidden="true"></i></button>
-        
+
     </div>
 
     <div id="controls">
-        <button id="new-chat-btn">Find New One  <i class="fa fa-users" aria-hidden="true"></i></button>
-        <button id="skip-btn">Leave  <i class="fa fa-sign-out" aria-hidden="true"></i></button>
+        <button id="new-chat-btn">Find New One <i class="fa fa-users" aria-hidden="true"></i></button>
+        <button id="skip-btn">Leave <i class="fa fa-sign-out" aria-hidden="true"></i></button>
     </div>
 
     <script type="module" src="chat.js"></script>
 
 </body>
-<footer>
-    <p class="ptext"> &copy; 2024 findaguest.online | by Dineth Gunawardana</p>
-</footer>
 
+<!-- MacBook Dock Menu -->
+<div class="dock">
+    <a href="/public/" class="dock-icon">
+        <i class="fas fa-home"></i>
+    </a>
+    <a href="/public/edu/" class="dock-icon">
+        <i class="fa fa-book" aria-hidden="true"></i>
+    </a>
+    <a href="/public/edu/profile.html" class="dock-icon">
+        <i class="fa fa-user" aria-hidden="true"></i>
+    </a>
+</div>
 </html>
