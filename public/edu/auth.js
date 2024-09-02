@@ -1,6 +1,6 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signInWithPopup, GoogleAuthProvider } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
-import { getDatabase, ref, set } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-database.js";
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
+import { getDatabase, ref, set, get, query, orderByChild, equalTo } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-database.js";
 import { getStorage, ref as storageRef, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-storage.js";
 
 // Firebase configuration
@@ -20,10 +20,38 @@ const auth = getAuth(app);
 const db = getDatabase(app);
 const storage = getStorage(app);
 
+// DOM Elements
+const loader = document.getElementById('loader');
+const messageContainer = document.getElementById('message');
+
+// Function to show loader
+function showLoader() {
+    loader.style.display = 'block';
+}
+
+// Function to hide loader
+function hideLoader() {
+    loader.style.display = 'none';
+}
+
+// Function to show message
+function showMessage(message, type = 'success') {
+    messageContainer.textContent = message;
+    messageContainer.className = `message-container ${type}`;
+}
+
+// Clear message after timeout
+function clearMessage(timeout = 3000) {
+    setTimeout(() => {
+        messageContainer.textContent = '';
+    }, timeout);
+}
+
 // Sign Up Function
 document.getElementById('signup-form').addEventListener('submit', async (e) => {
     e.preventDefault();
 
+    showLoader();
     const name = document.getElementById('signup-name').value;
     const username = document.getElementById('signup-username').value;
     const email = document.getElementById('signup-email').value;
@@ -54,63 +82,56 @@ document.getElementById('signup-form').addEventListener('submit', async (e) => {
             photoURL: photoURL
         });
 
-        alert("Sign Up Successful!");
-        window.location.href = "index.html"; // Redirect to the main page after sign-up
+        hideLoader();
+        showMessage("Sign Up Successful!", "success");
+        clearMessage();
+
+        setTimeout(() => {
+            window.location.href = "index.html"; // Redirect to the main page after sign-up
+        }, 1000);
     } catch (error) {
-        console.error("Sign Up Error: ", error.message);
-    }
-});
-
-// Google Sign Up / Sign In
-const googleProvider = new GoogleAuthProvider();
-
-document.getElementById('google-signup').addEventListener('click', async () => {
-    try {
-        const result = await signInWithPopup(auth, googleProvider);
-        const user = result.user;
-
-        const userRef = ref(db, 'users/' + user.uid);
-        const snapshot = await get(userRef);
-
-        // If the user is signing up for the first time, ask for additional information
-        if (!snapshot.exists()) {
-            const name = prompt("Please enter your full name:");
-            const username = prompt("Please choose a username:");
-            const role = confirm("Are you a teacher? Click OK for yes, Cancel for no.") ? "teacher" : "student";
-            const bio = prompt("Tell us a little about yourself (minimum 2 characters):");
-
-            await set(userRef, {
-                name: name,
-                username: username,
-                email: user.email,
-                role: role,
-                bio: bio,
-                photoURL: user.photoURL || ""
-            });
-
-            alert("Sign Up Successful!");
-            window.location.href = "index.html";
-        } else {
-            alert("Sign In Successful!");
-            window.location.href = "index.html"; // Redirect to the main page after sign-in
-        }
-    } catch (error) {
-        console.error("Google Sign Up/In Error: ", error.message);
+        hideLoader();
+        showMessage("Sign Up Error: " + error.message, "error");
+        clearMessage();
     }
 });
 
 // Sign In Function
 document.getElementById('signin-form').addEventListener('submit', async (e) => {
     e.preventDefault();
+
+    showLoader();
     const usernameOrEmail = document.getElementById('signin-username').value;
     const password = document.getElementById('signin-password').value;
 
     try {
-        await signInWithEmailAndPassword(auth, usernameOrEmail, password);
-        alert("Sign In Successful!");
-        window.location.href = "index.html"; // Redirect to the main page after sign-in
+        // Check if input is an email or a username
+        let signInMethod = signInWithEmailAndPassword(auth, usernameOrEmail, password);
+        if (!usernameOrEmail.includes('@')) {
+            // Treat input as a username
+            const usersRef = query(ref(db, 'users'), orderByChild('username'), equalTo(usernameOrEmail));
+            const snapshot = await get(usersRef);
+
+            if (snapshot.exists()) {
+                const userData = Object.values(snapshot.val())[0];
+                signInMethod = signInWithEmailAndPassword(auth, userData.email, password);
+            } else {
+                throw new Error("Username not found");
+            }
+        }
+
+        await signInMethod;
+        hideLoader();
+        showMessage("Sign In Successful!", "success");
+        clearMessage();
+
+        setTimeout(() => {
+            window.location.href = "index.html"; // Redirect to the main page after sign-in
+        }, 1000);
     } catch (error) {
-        console.error("Sign In Error: ", error.message);
+        hideLoader();
+        showMessage("Sign In Error: " + error.message, "error");
+        clearMessage();
     }
 });
 

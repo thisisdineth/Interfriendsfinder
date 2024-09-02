@@ -139,7 +139,31 @@ input:focus, textarea:focus {
     font-size: 1em;
     color: #000000;
 }
+.message-container {
+    text-align: center;
+    margin-top: 20px;
+    font-size: 1.2em;
+}
 
+.message-container.success {
+    color: green;
+}
+
+.message-container.error {
+    color: red;
+}
+
+.loader-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+}
+
+.loader-container img {
+    width: 50px;
+    height: 50px;
+}
 button {
     background: #ebe7e7;
     border: 1px;
@@ -197,7 +221,10 @@ footer {
     .app-name {
         font-size: 1.5em;
     }
-
+    .loader-container img {
+        width: 40px;
+        height: 40px;
+    }
     button {
         font-size: 0.9em;
         padding: 8px;

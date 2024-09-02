@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Inter EDU - Signup / sign in</title>
+    <title>Inter EDU - Signup / Sign In</title>
     <link rel="stylesheet" href="signpage.css">
 </head>
 <body>
@@ -34,10 +34,9 @@
                         </label>
                     </div>
 
-                    <textarea id="signup-bio" placeholder="Tell us a little about yourself (minimum 150 characters)" minlength="150" required></textarea>
+                    <textarea id="signup-bio" placeholder="Tell us a little about yourself (2-20 characters)" minlength="2" maxlength="20" required></textarea>
                     
                     <button type="submit">Sign Up</button>
-                    <button id="google-signup" type="button">Sign Up with Google</button>
                 </form>
             </div>
             <div class="form-container" id="signin-container">
@@ -46,13 +45,16 @@
                     <input type="text" id="signin-username" placeholder="Username or Email" required>
                     <input type="password" id="signin-password" placeholder="Password" required>
                     <button type="submit">Sign In</button>
-                    <button id="google-signin" type="button">Sign In with Google</button>
                 </form>
             </div>
             <div class="image-container">
                 <img src="img/logo.png" alt="Sign Up / Sign In" class="auth-image">
             </div>
         </div>
+        <div id="loader" class="loader-container" style="display:none;">
+            <img src="img/loader.gif" alt="Loading...">
+        </div>
+        <div id="message" class="message-container"></div>
     </div>
     <footer>
         <p>&copy; 2024 IFF. All rights reserved.</p>
