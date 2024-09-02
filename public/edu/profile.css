@@ -1,6 +1,6 @@
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: linear-gradient(to right, #e0f7fa, #e1bee7);
+    background: linear-gradient(to right, #ffffff, #e3f2fd);
     margin: 0;
     padding: 0;
     display: flex;
@@ -9,7 +9,7 @@ body {
 }
 
 header {
-    background: #5c6bc0;
+    background: #42a5f5;
     color: white;
     padding: 20px;
     display: flex;
@@ -49,62 +49,106 @@ nav ul li a:hover {
 .container {
     flex: 1;
     padding: 20px;
-    max-width: 900px;
+    max-width: 1000px;
     margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
 }
 
-h2 {
+.profile-section, .tweets-section {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.profile-section h2, .tweets-section h2 {
     color: #333;
-    font-size: 2em;
+    font-size: 1.8em;
     margin-bottom: 20px;
 }
 
-.user-info {
-    background: white;
-    padding: 20px;
+.profile-section form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.profile-section input, .profile-section textarea {
+    border: 1px solid #ddd;
     border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    margin-bottom: 30px;
+    padding: 10px;
+    font-size: 1em;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
-.user-info p {
-    font-size: 1.2em;
-    margin: 10px 0;
-    color: #555;
+.profile-section input:focus, .profile-section textarea:focus {
+    border-color: #42a5f5;
+    box-shadow: 0 0 5px rgba(66, 165, 245, 0.5);
+    outline: none;
 }
 
-.user-tweets-container {
-    background: white;
-    padding: 20px;
+.profile-picture {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+.profile-picture img {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    margin-bottom: 10px;
+    border: 2px solid #42a5f5;
+}
+
+.upload-photo-label {
+    display: inline-block;
+    background-color: #42a5f5;
+    color: white;
+    padding: 8px 12px;
     border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    font-size: 0.9em;
 }
 
-.tweet {
-    background: #f3e5f5;
+.upload-photo-label:hover {
+    background-color: #1e88e5;
+}
+
+.profile-section button {
+    background: #42a5f5;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 20px;
+    font-size: 1em;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.profile-section button:hover {
+    background: #1e88e5;
+}
+
+.tweets-section .tweet, .tweets-section .reply {
+    background: #e3f2fd;
     padding: 15px;
     border-radius: 8px;
     margin-bottom: 20px;
-    position: relative;
 }
 
-.tweet p {
-    font-size: 1.2em;
-    margin: 0 0 10px 0;
-    color: #333;
+.tweet .actions, .reply .actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
 }
 
-.tweet small {
-    display: block;
-    color: #888;
-    margin-bottom: 10px;
-}
-
-.tweet .delete-btn {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    background: #e57373;
+.tweet .actions button, .reply .actions button {
+    background: #ef5350;
     border: none;
     color: white;
     border-radius: 4px;
@@ -114,16 +158,28 @@ h2 {
     transition: background 0.3s ease;
 }
 
-.tweet .delete-btn:hover {
-    background: #ef5350;
+.tweet .actions button:hover, .reply .actions button:hover {
+    background: #e53935;
 }
 
 footer {
-    background: #3f51b5;
+    background: #1e88e5;
     color: white;
     text-align: center;
     padding: 10px;
     position: relative;
     bottom: 0;
     width: 100%;
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+    .container {
+        padding: 10px;
+        max-width: 100%;
+    }
+
+    .profile-section, .tweets-section {
+        padding: 10px;
+    }
 }

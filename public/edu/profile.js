@@ -1,6 +1,7 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
-import { getAuth, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
-import { getDatabase, ref, onValue, remove } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-database.js";
+import { getAuth, signOut, onAuthStateChanged, updatePassword, updateEmail } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
+import { getDatabase, ref, set, update, onValue, get, remove } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-database.js";
+import { getStorage, ref as storageRef, uploadBytes, getDownloadURL, deleteObject } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-storage.js";
 
 // Firebase configuration
 const firebaseConfig = {
@@ -17,54 +18,237 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getDatabase(app);
+const storage = getStorage(app);
 
 // DOM Elements
-const userInfoContainer = document.querySelector('.user-info');
+const profileForm = document.getElementById('profile-form');
+const profilePhoto = document.getElementById('profile-photo');
+const uploadPhoto = document.getElementById('upload-photo');
+const profileName = document.getElementById('profile-name');
+const profileUsername = document.getElementById('profile-username');
+const profileEmail = document.getElementById('profile-email');
+const profileBio = document.getElementById('profile-bio');
+const profilePassword = document.getElementById('profile-password');
+const updateProfileBtn = document.getElementById('update-profile-btn');
+const deleteProfileBtn = document.getElementById('delete-profile-btn');
 const userTweetsContainer = document.getElementById('user-tweets-container');
+const userRepliesContainer = document.getElementById('user-replies-container');
 const signoutBtn = document.getElementById('signout-btn');
 
-// Load user information and tweets
-onAuthStateChanged(auth, (user) => {
-    if (user) {
-        // Display user info
-        userInfoContainer.innerHTML = `
-            <p><strong>Name:</strong> ${user.displayName}</p>
-            <p><strong>Email:</strong> ${user.email}</p>
-        `;
+// Load user profile
+const loadUserProfile = async (user) => {
+    try {
+        const userRef = ref(db, `users/${user.uid}`);
+        const userData = (await get(userRef)).val();
 
-        // Load user tweets
-        const userTweetsRef = ref(db, 'tweets/');
-        onValue(userTweetsRef, (snapshot) => {
-            userTweetsContainer.innerHTML = "";  // Clear previous tweets
-            snapshot.forEach((childSnapshot) => {
-                const tweetData = childSnapshot.val();
-                if (tweetData.userId === user.uid) {
-                    const tweetElement = document.createElement('div');
-                    tweetElement.className = 'tweet';
-                    tweetElement.innerHTML = `
-                        <p>${tweetData.content}</p>
-                        <small>Posted on ${new Date(tweetData.timestamp).toLocaleString()}</small>
-                        <button class="delete-btn" data-id="${childSnapshot.key}">Delete</button>
-                    `;
-                    userTweetsContainer.appendChild(tweetElement);
-                }
-            });
+        if (userData) {
+            profileName.value = userData.name || '';
+            profileUsername.value = userData.username || '';
+            profileEmail.value = userData.email || '';
+            profileBio.value = userData.bio || '';
 
-            // Add event listeners for delete buttons
-            document.querySelectorAll('.delete-btn').forEach(button => {
-                button.addEventListener('click', async (e) => {
-                    const tweetId = e.target.dataset.id;
-                    await remove(ref(db, 'tweets/' + tweetId));  // Delete the tweet from the database
-                });
-            });
-        });
-    } else {
-        window.location.href = "signpage.html";  // Redirect to sign-in page if not logged in
+            if (userData.photoURL) {
+                profilePhoto.src = userData.photoURL;
+            } else {
+                profilePhoto.src = 'https://via.placeholder.com/150';
+            }
+        } else {
+            console.error('No user data found!');
+        }
+    } catch (error) {
+        console.error('Error loading user profile:', error);
+    }
+};
+
+// Update profile
+updateProfileBtn.addEventListener('click', async () => {
+    const user = auth.currentUser;
+    if (!user) return;
+
+    const name = profileName.value;
+    const username = profileUsername.value;
+    const email = profileEmail.value;
+    const bio = profileBio.value;
+    const password = profilePassword.value;
+
+    const userRef = ref(db, `users/${user.uid}`);
+    const updates = { name, username, email, bio };
+
+    try {
+        await updateEmail(user, email);
+        if (password) {
+            await updatePassword(user, password);
+        }
+        await update(userRef, updates);
+
+        if (uploadPhoto.files[0]) {
+            const photoFile = uploadPhoto.files[0];
+            const photoRef = storageRef(storage, `profilePictures/${user.uid}/${photoFile.name}`);
+            await uploadBytes(photoRef, photoFile);
+            const photoURL = await getDownloadURL(photoRef);
+            await update(userRef, { photoURL });
+            profilePhoto.src = photoURL;
+        }
+
+        alert('Profile updated successfully!');
+    } catch (error) {
+        console.error('Error updating profile:', error);
     }
 });
 
+// Delete profile
+deleteProfileBtn.addEventListener('click', async () => {
+    const user = auth.currentUser;
+    if (!user) return;
+
+    const confirmation = confirm('Are you sure you want to delete your profile? This action cannot be undone.');
+    if (!confirmation) return;
+
+    try {
+        const userRef = ref(db, `users/${user.uid}`);
+
+        const userData = (await get(userRef)).val();
+        if (userData.photoURL) {
+            const photoRef = storageRef(storage, userData.photoURL);
+            await deleteObject(photoRef);
+        }
+
+        await remove(userRef);
+
+        const tweetsRef = ref(db, 'tweets/');
+        const repliesRef = ref(db, 'replies/');
+
+        onValue(tweetsRef, (snapshot) => {
+            snapshot.forEach((childSnapshot) => {
+                const tweetData = childSnapshot.val();
+                if (tweetData.userId === user.uid) {
+                    remove(ref(db, `tweets/${childSnapshot.key}`));
+                }
+            });
+        });
+
+        onValue(repliesRef, (snapshot) => {
+            snapshot.forEach((childSnapshot) => {
+                const replyData = childSnapshot.val();
+                if (replyData.userId === user.uid) {
+                    remove(ref(db, `replies/${childSnapshot.key}`));
+                }
+            });
+        });
+
+        await signOut(auth);
+        alert('Profile deleted successfully!');
+        window.location.href = "signpage.html";
+    } catch (error) {
+        console.error('Error deleting profile:', error);
+    }
+});
+
+// Load user's tweets
+const loadUserTweets = async (user) => {
+    try {
+        const tweetsRef = ref(db, 'tweets/');
+        onValue(tweetsRef, (snapshot) => {
+            userTweetsContainer.innerHTML = "";
+            snapshot.forEach((childSnapshot) => {
+                const tweetData = childSnapshot.val();
+                if (tweetData.userId === user.uid) {
+                    const tweetElement = createTweetElement(childSnapshot.key, tweetData);
+                    userTweetsContainer.appendChild(tweetElement);
+                }
+            });
+        });
+    } catch (error) {
+        console.error('Error loading user tweets:', error);
+    }
+};
+
+// Load replies to user's tweets
+const loadUserReplies = async (user) => {
+    try {
+        const repliesRef = ref(db, 'replies/');
+        onValue(repliesRef, (snapshot) => {
+            userRepliesContainer.innerHTML = "";
+            snapshot.forEach((childSnapshot) => {
+                const replyData = childSnapshot.val();
+                const tweetRef = ref(db, `tweets/${childSnapshot.key}`);
+                get(tweetRef).then((tweetSnapshot) => {
+                    const tweetData = tweetSnapshot.val();
+                    if (tweetData && tweetData.userId === user.uid) {
+                        const replyElement = createReplyElement(childSnapshot.key, replyData);
+                        userRepliesContainer.appendChild(replyElement);
+                    }
+                });
+            });
+        });
+    } catch (error) {
+        console.error('Error loading user replies:', error);
+    }
+};
+
+// Create tweet element
+const createTweetElement = (tweetId, tweetData) => {
+    const tweetElement = document.createElement('div');
+    tweetElement.className = 'tweet';
+    tweetElement.innerHTML = `
+        <p>${tweetData.content}</p>
+        <small>Posted on ${new Date(tweetData.timestamp).toLocaleString()}</small>
+        <div class="actions">
+            <button class="delete-tweet-btn" data-id="${tweetId}">Delete</button>
+        </div>
+    `;
+
+    tweetElement.querySelector('.delete-tweet-btn').addEventListener('click', async () => {
+        try {
+            await remove(ref(db, `tweets/${tweetId}`));
+        } catch (error) {
+            console.error('Error deleting tweet:', error);
+        }
+    });
+
+    return tweetElement;
+};
+
+// Create reply element
+const createReplyElement = (replyId, replyData) => {
+    const replyElement = document.createElement('div');
+    replyElement.className = 'reply';
+    replyElement.innerHTML = `
+        <p>${replyData.content}</p>
+        <small>Posted on ${new Date(replyData.timestamp).toLocaleString()}</small>
+        <div class="actions">
+            <button class="delete-reply-btn" data-id="${replyId}">Delete</button>
+        </div>
+    `;
+
+    replyElement.querySelector('.delete-reply-btn').addEventListener('click', async () => {
+        try {
+            await remove(ref(db, `replies/${replyId}`));
+        } catch (error) {
+            console.error('Error deleting reply:', error);
+        }
+    });
+
+    return replyElement;
+};
+
 // Sign out functionality
 signoutBtn.addEventListener('click', async () => {
-    await signOut(auth);
-    window.location.href = "signpage.html";  // Redirect to sign-in page after signing out
+    try {
+        await signOut(auth);
+        window.location.href = "signpage.html";
+    } catch (error) {
+        console.error('Error signing out:', error);
+    }
+});
+
+// Ensure the user is authenticated and load profile data
+onAuthStateChanged(auth, (user) => {
+    if (user) {
+        loadUserProfile(user);
+        loadUserTweets(user);
+        loadUserReplies(user);
+    } else {
+        window.location.href = "signpage.html";
+    }
 });

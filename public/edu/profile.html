@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Profile | EduConnect</title>
     <link rel="stylesheet" href="profile.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
     <header>
@@ -15,20 +16,40 @@
         <nav>
             <ul>
                 <li><a href="index.html">Home</a></li>
-                <li><a href="profile.html">Profile</a></li>
                 <li><a id="signout-btn">Sign Out</a></li>
             </ul>
         </nav>
     </header>
 
     <div class="container">
-        <h2>Your Profile</h2>
-        <div class="user-info">
-            <!-- User information will be dynamically loaded here -->
+        <div class="profile-section">
+            <h2>My Profile</h2>
+            <form id="profile-form">
+                <div class="profile-picture">
+                    <img id="profile-photo" src="img/default-avatar.png" alt="Profile Picture">
+                    <label for="upload-photo" class="upload-photo-label"><i class="fas fa-camera"></i> Change Photo</label>
+                    <input type="file" id="upload-photo" accept="image/*">
+                </div>
+                <input type="text" id="profile-name" placeholder="Full Name" required>
+                <input type="text" id="profile-username" placeholder="Username" required>
+                <input type="email" id="profile-email" placeholder="Email" required>
+                <textarea id="profile-bio" placeholder="Bio" required></textarea>
+                <input type="password" id="profile-password" placeholder="New Password">
+                <button type="button" id="update-profile-btn">Update Profile</button>
+                <button type="button" id="delete-profile-btn">Delete Profile</button>
+            </form>
         </div>
 
-        <div class="user-tweets-container" id="user-tweets-container">
-            <!-- User's tweets will be dynamically loaded here -->
+        <div class="tweets-section">
+            <h2>My Tweets</h2>
+            <div id="user-tweets-container">
+                <!-- User's tweets will be loaded here -->
+            </div>
+
+            <h2>Replies to My Tweets</h2>
+            <div id="user-replies-container">
+                <!-- Replies to the user's tweets will be loaded here -->
+            </div>
         </div>
     </div>
 
