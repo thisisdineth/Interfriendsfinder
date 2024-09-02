@@ -58,102 +58,115 @@ postTweetBtn.addEventListener('click', async () => {
 // Load tweets in real-time
 onValue(ref(db, 'tweets/'), (snapshot) => {
     tweetsContainer.innerHTML = ""; // Clear previous tweets
+    const tweets = [];
+
     snapshot.forEach((childSnapshot) => {
         const tweetData = childSnapshot.val();
         const tweetId = childSnapshot.key;
-        const tweetElement = document.createElement('div');
-        tweetElement.className = 'tweet';
-        tweetElement.innerHTML = `
-            <div class="tweet-header">
-                <img src="${tweetData.photoURL}" alt="${tweetData.author}'s Profile Picture">
-                <h3 class="fullname">${tweetData.author}</h3>
-                <div class="bio-tooltip">${tweetData.bio}</div>
-            </div>
-            <p>${tweetData.content}</p>
-            <small>Posted by ${tweetData.author} at ${new Date(tweetData.timestamp).toLocaleString()}</small>
-            <div class="actions">
-                <button class="reply-btn" data-id="${tweetId}" data-author="${tweetData.author}">Reply</button>
-                ${tweetData.userId === auth.currentUser?.uid ? `<button class="delete-btn" data-id="${tweetId}">Delete</button>` : ''}
-                <button class="like-btn" data-id="${tweetId}" data-liked-by="${tweetData.likedBy?.includes(auth.currentUser?.uid) ? 'true' : 'false'}">
-                    <i class="fa fa-thumbs-up"></i> Like <span class="like-count">${tweetData.likes}</span>
-                </button>
-                <button class="load-replies-btn" data-id="${tweetId}">Load Replies</button>
-            </div>
-            <div class="replies-container" id="replies-${tweetId}"></div>
-        `;
-
-        tweetsContainer.appendChild(tweetElement);
+        tweets.push({ id: tweetId, data: tweetData });
     });
 
-    // Add event listeners for delete buttons
-    document.querySelectorAll('.delete-btn').forEach(button => {
-        button.addEventListener('click', async (e) => {
-            const tweetId = e.target.dataset.id;
-            await remove(ref(db, 'tweets/' + tweetId)); // Delete the tweet from the database
-            await remove(ref(db, 'replies/' + tweetId)); // Also delete all replies associated with this tweet
-        });
-    });
+    if (tweets.length > 0) {
+        // Sort tweets by timestamp to get the latest tweet first
+        tweets.sort((a, b) => new Date(b.data.timestamp) - new Date(a.data.timestamp));
+        
+        // Extract the most recent tweet
+        const latestTweet = tweets.shift();
+        
+        // Shuffle the remaining tweets
+        const shuffledTweets = tweets.sort(() => Math.random() - 0.5);
 
-    // Add event listeners for reply buttons
-    document.querySelectorAll('.reply-btn').forEach(button => {
-        button.addEventListener('click', () => {
-            const tweetId = button.dataset.id;
-            const replyAuthor = button.dataset.author;
-            const replyContent = prompt(`Replying to ${replyAuthor}:`);
-            if (replyContent && replyContent.trim() !== "") {
-                postReply(tweetId, replyContent, replyAuthor);
-            }
-        });
-    });
+        // Render the most recent tweet first
+        renderTweet(latestTweet.id, latestTweet.data);
 
-    // Add event listeners for load replies buttons
-    document.querySelectorAll('.load-replies-btn').forEach(button => {
-        button.addEventListener('click', async () => {
-            const tweetId = button.dataset.id;
-            const repliesContainer = document.getElementById(`replies-${tweetId}`);
-            const isVisible = repliesContainer.style.display === 'block';
-            repliesContainer.style.display = isVisible ? 'none' : 'block'; // Toggle visibility
-
-            if (!isVisible) {
-                loadReplies(tweetId, repliesContainer);
-            }
-        });
-    });
-
-    // Add event listeners for like buttons
-    document.querySelectorAll('.like-btn').forEach(button => {
-        button.addEventListener('click', async (e) => {
-            const tweetId = e.target.dataset.id;
-            const tweetRef = ref(db, 'tweets/' + tweetId);
-            const tweetSnapshot = await get(tweetRef);
-            const tweetData = tweetSnapshot.val();
-
-            if (tweetData) {  // Ensure tweetData is not null or undefined
-                const likedBy = tweetData.likedBy || [];
-                const userId = auth.currentUser.uid;
-
-                let newLikes;
-                if (likedBy.includes(userId)) {
-                    // Unlike the tweet
-                    newLikes = tweetData.likes - 1;
-                    likedBy.splice(likedBy.indexOf(userId), 1);
-                } else {
-                    // Like the tweet
-                    newLikes = tweetData.likes + 1;
-                    likedBy.push(userId);
-                }
-
-                await update(tweetRef, { likes: newLikes, likedBy: likedBy });
-
-                // Update the button appearance
-                e.target.dataset.likedBy = likedBy.includes(userId) ? 'true' : 'false';
-                e.target.querySelector('.like-count').innerText = newLikes;
-            } else {
-                console.error("Tweet data is null or undefined. Cannot update likes.");
-            }
-        });
-    });
+        // Render the shuffled tweets
+        shuffledTweets.forEach(tweet => renderTweet(tweet.id, tweet.data));
+    }
 });
+
+// Function to render a tweet
+const renderTweet = (tweetId, tweetData) => {
+    const tweetElement = document.createElement('div');
+    tweetElement.className = 'tweet';
+    tweetElement.innerHTML = `
+        <div class="tweet-header">
+            <img src="${tweetData.photoURL}" alt="${tweetData.author}'s Profile Picture">
+            <h3 class="fullname">${tweetData.author}</h3>
+            <div class="bio-tooltip">${tweetData.bio}</div>
+        </div>
+        <p>${tweetData.content}</p>
+        <small>Posted by ${tweetData.author} at ${new Date(tweetData.timestamp).toLocaleString()}</small>
+        <div class="actions">
+            <button class="reply-btn" data-id="${tweetId}" data-author="${tweetData.author}">Reply</button>
+            ${tweetData.userId === auth.currentUser?.uid ? `<button class="delete-btn" data-id="${tweetId}">Delete</button>` : ''}
+            <button class="like-btn" data-id="${tweetId}" data-liked-by="${tweetData.likedBy?.includes(auth.currentUser?.uid) ? 'true' : 'false'}">
+                <i class="fa fa-thumbs-up"></i> Like <span class="like-count">${tweetData.likes}</span>
+            </button>
+            <button class="load-replies-btn" data-id="${tweetId}">Load Replies</button>
+        </div>
+        <div class="replies-container" id="replies-${tweetId}"></div>
+    `;
+
+    tweetsContainer.appendChild(tweetElement);
+
+    // Add event listeners for the buttons
+    addTweetEventListeners(tweetElement, tweetId);
+};
+
+// Add event listeners for each tweet
+const addTweetEventListeners = (tweetElement, tweetId) => {
+    // Delete button
+    tweetElement.querySelector('.delete-btn')?.addEventListener('click', async (e) => {
+        await remove(ref(db, 'tweets/' + tweetId));
+        await remove(ref(db, 'replies/' + tweetId));
+    });
+
+    // Like button
+    tweetElement.querySelector('.like-btn')?.addEventListener('click', async (e) => {
+        const tweetRef = ref(db, 'tweets/' + tweetId);
+        const tweetSnapshot = await get(tweetRef);
+        const tweetData = tweetSnapshot.val();
+
+        if (tweetData) {
+            const likedBy = tweetData.likedBy || [];
+            const userId = auth.currentUser.uid;
+
+            let newLikes;
+            if (likedBy.includes(userId)) {
+                newLikes = tweetData.likes - 1;
+                likedBy.splice(likedBy.indexOf(userId), 1);
+            } else {
+                newLikes = tweetData.likes + 1;
+                likedBy.push(userId);
+            }
+
+            await update(tweetRef, { likes: newLikes, likedBy: likedBy });
+
+            e.target.dataset.likedBy = likedBy.includes(userId) ? 'true' : 'false';
+            e.target.querySelector('.like-count').innerText = newLikes;
+        }
+    });
+
+    // Load replies button
+    tweetElement.querySelector('.load-replies-btn')?.addEventListener('click', async () => {
+        const repliesContainer = document.getElementById(`replies-${tweetId}`);
+        const isVisible = repliesContainer.style.display === 'block';
+        repliesContainer.style.display = isVisible ? 'none' : 'block';
+
+        if (!isVisible) {
+            loadReplies(tweetId, repliesContainer);
+        }
+    });
+
+    // Reply button
+    tweetElement.querySelector('.reply-btn')?.addEventListener('click', () => {
+        const replyAuthor = tweetElement.querySelector('.reply-btn').dataset.author;
+        const replyContent = prompt(`Replying to ${replyAuthor}:`);
+        if (replyContent && replyContent.trim() !== "") {
+            postReply(tweetId, replyContent, replyAuthor);
+        }
+    });
+};
 
 // Function to post a reply
 const postReply = async (tweetId, content, replyAuthor) => {
@@ -174,14 +187,14 @@ const postReply = async (tweetId, content, replyAuthor) => {
             likedBy: []  // Array to store user IDs who liked the reply
         };
 
-        await push(replyRef, newReply); // Push the new reply to the database
+        await push(replyRef, newReply);
     }
 };
 
 // Function to load replies for a specific tweet
 const loadReplies = (tweetId, container) => {
     onValue(ref(db, `replies/${tweetId}`), (snapshot) => {
-        container.innerHTML = ""; // Clear previous replies
+        container.innerHTML = "";
         snapshot.forEach((childSnapshot) => {
             const replyData = childSnapshot.val();
             const replyId = childSnapshot.key;
@@ -203,59 +216,49 @@ const loadReplies = (tweetId, container) => {
             container.appendChild(replyElement);
         });
 
-        // Add event listeners for delete reply buttons
+        // Add event listeners for replies
         document.querySelectorAll('.delete-reply-btn').forEach(button => {
             button.addEventListener('click', async (e) => {
                 const replyId = e.target.dataset.id;
                 const tweetId = e.target.dataset.tweetId;
-                await remove(ref(db, `replies/${tweetId}/${replyId}`)); // Delete the reply from the database
+                await remove(ref(db, `replies/${tweetId}/${replyId}`));
             });
         });
 
-        // Add event listeners for reply-to-reply buttons
         document.querySelectorAll('.reply-btn').forEach(button => {
             button.addEventListener('click', () => {
-                const tweetId = button.dataset.tweetId;
-                const replyId = button.dataset.id;
                 const replyAuthor = button.dataset.author;
                 const replyContent = prompt(`Replying to ${replyAuthor}:`);
                 if (replyContent && replyContent.trim() !== "") {
-                    postReply(tweetId, replyContent, replyAuthor, replyId);
+                    postReply(tweetId, replyContent, replyAuthor);
                 }
             });
         });
 
-        // Add event listeners for like buttons on replies
         document.querySelectorAll('.like-btn').forEach(button => {
             button.addEventListener('click', async (e) => {
                 const replyId = e.target.dataset.id;
-                const tweetId = e.target.dataset.tweetId;
                 const replyRef = ref(db, `replies/${tweetId}/${replyId}`);
                 const replySnapshot = await get(replyRef);
                 const replyData = replySnapshot.val();
 
-                if (replyData) {  // Ensure replyData is not null or undefined
+                if (replyData) {
                     const likedBy = replyData.likedBy || [];
                     const userId = auth.currentUser.uid;
 
                     let newLikes;
                     if (likedBy.includes(userId)) {
-                        // Unlike the reply
                         newLikes = replyData.likes - 1;
                         likedBy.splice(likedBy.indexOf(userId), 1);
                     } else {
-                        // Like the reply
                         newLikes = replyData.likes + 1;
                         likedBy.push(userId);
                     }
 
                     await update(replyRef, { likes: newLikes, likedBy: likedBy });
 
-                    // Update the button appearance
                     e.target.dataset.likedBy = likedBy.includes(userId) ? 'true' : 'false';
                     e.target.querySelector('.like-count').innerText = newLikes;
-                } else {
-                    console.error("Reply data is null or undefined. Cannot update likes.");
                 }
             });
         });
@@ -265,12 +268,12 @@ const loadReplies = (tweetId, container) => {
 // Sign out functionality
 signoutBtn.addEventListener('click', async () => {
     await signOut(auth);
-    window.location.href = "signpage.html"; // Redirect to sign-in page after signing out
+    window.location.href = "signpage.html";
 });
 
 // Ensure the user is authenticated
 onAuthStateChanged(auth, (user) => {
     if (!user) {
-        window.location.href = "signpage.html"; // Redirect to sign-in page if not logged in
+        window.location.href = "signpage.html";
     }
 });
