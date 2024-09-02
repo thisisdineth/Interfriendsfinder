@@ -6,15 +6,17 @@ body {
     display: flex;
     flex-direction: column;
     height: 100vh;
+    overflow-x: hidden;
 }
 
 header {
-    background: #42a5f5;
-    color: white;
+    background-color: #89acee;
+    color: rgb(80, 0, 76);
     padding: 20px;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    
 }
 
 .logo-container {
@@ -49,11 +51,14 @@ nav ul li a:hover {
 .container {
     flex: 1;
     padding: 20px;
-    max-width: 1000px;
+    width: 98%;
     margin: 0 auto;
     display: flex;
     flex-direction: column;
     gap: 40px;
+    max-width: 90;
+  
+    
 }
 
 .profile-section, .tweets-section {
@@ -161,6 +166,37 @@ nav ul li a:hover {
 .tweet .actions button:hover, .reply .actions button:hover {
     background: #e53935;
 }
+/* Dock Menu */
+.dock {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(10px);
+    padding: 10px 20px;
+    border-radius: 20px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+/* Dock Icons */
+.dock-icon {
+    text-align: center;
+    margin: 0 15px;
+    color: #333;
+    font-size: 24px;
+    transition: transform 0.3s ease;
+}
+
+.dock-icon:hover {
+    transform: scale(1.3);
+}
+
+.dock-icon i {
+    display: block;
+}
+
 
 footer {
     background: #1e88e5;
