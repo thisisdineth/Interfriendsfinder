@@ -203,17 +203,17 @@ function listenForMessages() {
                 messageElement.classList.add('stranger');
             }
 
-            // Add the message text with bad word filtering
+            // Add the message text with bad word filtering and math formatting
             const messageText = document.createElement('div');
             messageText.classList.add('message-text');
-            messageText.textContent = filterBadWords(messageData.message);
+            messageText.innerHTML = filterBadWords(formatMathExpression(messageData.message));
             messageElement.appendChild(messageText);
 
             // Show reply if exists
             if (messageData.replyTo) {
                 const replyElement = document.createElement('div');
                 replyElement.classList.add('reply');
-                replyElement.textContent = `Replying to: ${filterBadWords(messageData.replyTo.message)}`;
+                replyElement.innerHTML = `Replying to: ${filterBadWords(formatMathExpression(messageData.replyTo.message))}`;
                 messageElement.appendChild(replyElement);
             }
 
@@ -230,7 +230,7 @@ function listenForMessages() {
             const replyButton = document.createElement('button');
             replyButton.classList.add('reply-btn', 'hidden');
             replyButton.textContent = 'Reply';
-            replyButton.addEventListener('click', () => setReplyTo(filterBadWords(messageData.message)));
+            replyButton.addEventListener('click', () => setReplyTo(filterBadWords(formatMathExpression(messageData.message))));
             messageElement.appendChild(replyButton);
 
             // Show buttons on hover or click
@@ -314,7 +314,7 @@ function sendMessage() {
 
         set(newMessageRef, {
             uid: currentUser.uid,
-            message: filterBadWords(chatInput),
+            message: filterBadWords(formatMathExpression(chatInput)),
             replyTo: replyMessageId ? { message: replyMessageId } : null,
             timestamp: serverTimestamp()
         }).then(() => {
@@ -387,6 +387,21 @@ function filterBadWords(message) {
         });
         return cleanedWord;
     }).join(' ');
+}
+
+// Format math expressions into a readable format
+function formatMathExpression(input) {
+    // Convert exponents
+    input = input.replace(/\^(\d+)/g, (_, exp) => `<sup>${exp}</sup>`);
+
+    // Convert multiplication symbols
+    input = input.replace(/\*/g, '×');
+
+    // Convert division symbols
+    input = input.replace(/\//g, '÷');
+
+    // Additional formatting can be added here
+    return input;
 }
 
 // Event Listeners
