@@ -1,6 +1,6 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
 import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
-import { getDatabase, ref, onValue, update, get, push, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-database.js";
+import { getDatabase, ref, onValue, update, push, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-database.js";
 
 // Firebase configuration
 const firebaseConfig = {
@@ -41,7 +41,7 @@ onAuthStateChanged(auth, (user) => {
 
 // Update online status
 const updateOnlineStatus = async (isOnline) => {
-    const userStatusRef = ref(db, `users/${currentUserId}/online`);
+    const userStatusRef = ref(db, `users/${currentUserId}`);
     await update(userStatusRef, {
         online: isOnline,
         lastOnline: serverTimestamp()
@@ -107,7 +107,7 @@ const openChat = (userId, userData) => {
     chatContainer.innerHTML = `
         <div class="chat-header">
             <h3>${userData.name}</h3>
-            <span class="status">${userData.online ? 'Online' : 'Offline'}</span>
+            <span class="status">${userData.online ? 'Online' : `Last seen: ${new Date(userData.lastOnline).toLocaleString()}`}</span>
             <button class="block-btn" data-id="${userId}">${userData.blockedBy && userData.blockedBy[currentUserId] ? 'Unblock' : 'Block'}</button>
         </div>
         <div class="chat-messages" id="chat-messages"></div>
@@ -124,7 +124,7 @@ const openChat = (userId, userData) => {
 // Load chat messages
 const loadMessages = (userId) => {
     const chatMessagesContainer = document.getElementById('chat-messages');
-    const chatRef = ref(db, `chats/${currentUserId}_${userId}`);
+    const chatRef = ref(db, `chats/${getChatId(currentUserId, userId)}`);
 
     onValue(chatRef, (snapshot) => {
         chatMessagesContainer.innerHTML = "";
@@ -165,11 +165,11 @@ const setupChatListeners = (userId, userData) => {
         const content = messageInput.value.trim();
         if (content === "") return;
 
-        const chatRef = ref(db, `chats/${currentUserId}_${userId}`);
+        const chatRef = ref(db, `chats/${getChatId(currentUserId, userId)}`);
         const newMessage = {
             content,
             senderId: currentUserId,
-            timestamp: new Date().toISOString()
+            timestamp: serverTimestamp()
         };
 
         await push(chatRef, newMessage);
@@ -190,6 +190,11 @@ const setupChatListeners = (userId, userData) => {
 const updateTypingStatus = async (userId, isTyping) => {
     const typingStatusRef = ref(db, `users/${userId}/typing`);
     await update(typingStatusRef, { [currentUserId]: isTyping });
+};
+
+// Generate chat ID (combination of user IDs)
+const getChatId = (userId1, userId2) => {
+    return [userId1, userId2].sort().join('_');
 };
 
 // Search users
