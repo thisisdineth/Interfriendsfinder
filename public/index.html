@@ -10,27 +10,34 @@
     <link rel="manifest" href="/site.webmanifest">
     <meta name="msapplication-TileColor" content="#da532c">
     <meta name="theme-color" content="#ffffff">
-    <meta name="keywords" content="InterPal , Inter Friends finder , frined finder,frinds app, chat app, education app, maths solver , frinds groups">
+    <meta name="keywords"
+        content="InterPal , Inter Friends finder , friend finder, friends app, chat app, education app, maths solver , friends groups">
     <meta name="google-adsense-account" content="ca-pub-6219933128084510">
-    <meta name="description" content="This is conectivity app specialy designed for students and teengarers">
+    <meta name="description" content="This is a connectivity app specially designed for students and teenagers.">
     <meta property="og:title" content="Inter Friend Finder">
-    <meta property="og:description" content="This is conectivity app called Inter Friend Finder. You can simply find a person to chat, cure your boredom, and learn languages.">
+    <meta property="og:description"
+        content="This is a connectivity app called Inter Friend Finder. You can simply find a person to chat, cure your boredom, and learn languages.">
     <meta property="og:image" content="favicon/apple-touch-icon.png">
     <meta property="og:url" content="https://findaguest.online">
     <meta property="og:type" content="website">
     <title>Inter Friend Finder</title>
     <style>
         /* Ensure the website fits within the viewport without horizontal scrolling */
-        html, body {
+        html,
+        body {
             max-width: 100%;
             overflow-x: hidden;
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-        *, *::before, *::after {
+
+        *,
+        *::before,
+        *::after {
             box-sizing: inherit;
         }
+
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
             background: linear-gradient(to right, #e1fcff, #f6fefe);
@@ -42,10 +49,14 @@
             text-align: center;
             color: #333;
         }
-        #header, #content, #footer {
+
+        #header,
+        #content,
+        #footer {
             width: 100%;
             overflow-x: hidden;
         }
+
         #header {
             width: 100%;
             padding: 20px;
@@ -58,10 +69,13 @@
             transition: all 0.3s ease;
             position: sticky;
             top: 0;
+            z-index: 1000; /* Ensure header stays on top */
         }
+
         #logo {
             height: 60px;
         }
+
         #site-title {
             font-size: 32px;
             font-weight: 700;
@@ -69,18 +83,21 @@
             color: #f41f7b;
             transition: color 0.3s ease;
         }
+
         #site-title:hover {
             color: #d93208;
         }
+
         #header-content {
             display: flex;
             align-items: center;
         }
+
         #menu {
             display: flex;
             gap: 20px;
         }
-     
+
         #translate-btn {
             padding: 10px 20px;
             font-size: 16px;
@@ -93,9 +110,11 @@
             text-transform: uppercase;
             transition: all 0.3s ease;
         }
+
         #translate-btn:hover {
             background-color: #fa2bd4;
         }
+
         #start-chat-section {
             margin: 30px;
             padding: 30px;
@@ -104,9 +123,16 @@
             box-shadow: 0 6px 20px rgba(3, 130, 43, 0.1);
             transition: box-shadow 0.3s ease;
         }
+#hero{
+    width: 1500px;
+    max-width: 1500px;
+    height: 720px;
+
+}
         #start-chat-section:hover {
             box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
         }
+
         #start-chat-btn {
             display: inline-block;
             padding: 15px 40px;
@@ -122,11 +148,30 @@
             box-shadow: 0 4px 10px rgba(9, 188, 54, 0.5);
             margin-right: 10px;
         }
+
         #start-chat-btn:hover {
             background-color: #5aff23;
             box-shadow: 0 6px 15px rgba(69, 252, 33, 0.6);
             transform: translateY(-2px);
         }
+
+        .content-section {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            padding: 20px; /* Add padding for spacing */
+        }
+
+        .content-image {
+            max-width: 50%;
+            height: auto;
+        }
+
+        .content-text {
+            flex: 1;
+            text-align: left; /* Align text to the left */
+        }
+
         footer {
             background-color: #4f87f8;
             color: #ffffff;
@@ -136,38 +181,55 @@
             font-size: 14px;
             margin-top: auto;
         }
+
         @media only screen and (max-width: 600px) {
             #header {
                 flex-direction: column;
                 padding: 15px;
             }
+
+            .content-section {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .content-image {
+                max-width: 50px;
+                max-height: 50px;
+            }
+
             #logo {
                 height: 50px;
             }
+#hero{
+    max-width: 670px;
+    max-height: 400px;
+}
             #site-title {
                 font-size: 28px;
                 margin-left: 0;
                 margin-top: 10px;
             }
-            #live-users, #menu a {
-                font-size: 16px;
-            }
+
             #translate-btn {
                 padding: 8px 15px;
                 font-size: 14px;
                 margin-top: 8px;
                 color: black;
             }
+
             #start-chat-section {
                 margin: 15px;
                 padding: 20px;
             }
+
             #start-chat-btn {
                 padding: 12px 30px;
                 font-size: 16px;
                 margin-right: 5px;
                 margin-top: 15px;
             }
+
             footer {
                 font-size: 12px;
             }
@@ -188,11 +250,22 @@
         </nav>
     </header>
 
+    <div id="heroimg">
+        <img id="hero" src="img/hero.png" alt="hero img">
+    </div>
+
     <div id="start-chat-section">
         <button id="start-chat-btn" onclick="window.location.href='chats.html'">Inter Chat 👫</button>
         <button id="start-chat-btn" onclick="window.location.href='voice.html'">Inter Voice 🎙️</button>
         <button id="start-chat-btn" onclick="window.location.href='video.html'">Inter Video 📸</button>
         <button id="start-chat-btn" onclick="window.location.href='edu/index.html'">Inter EDU Wall 📚</button>
+    </div>
+
+    <div class="content-section">
+        <img src="img/favicon.png" alt="Image Description" class="content-image">
+        <div class="content-text">
+            <p>This is your text aligned to the right of the image. You can add more text here to fill the space.</p>
+        </div>
     </div>
 
     <footer>
