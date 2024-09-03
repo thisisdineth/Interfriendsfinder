@@ -1,6 +1,6 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
 import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
-import { getDatabase, ref, onValue, update, get } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-database.js";
+import { getDatabase, ref, onValue, update, get, push, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-database.js";
 
 // Firebase configuration
 const firebaseConfig = {
@@ -25,16 +25,28 @@ const searchBar = document.getElementById('search-bar');
 
 // Store current user's ID
 let currentUserId = null;
+let typingTimer; // Timer to track typing status
 
 // Initialize listeners
 onAuthStateChanged(auth, (user) => {
     if (user) {
         currentUserId = user.uid;
+        updateOnlineStatus(true);
+        window.addEventListener('beforeunload', () => updateOnlineStatus(false));
         loadUsers();
     } else {
         window.location.href = "signpage.html"; // Redirect if not logged in
     }
 });
+
+// Update online status
+const updateOnlineStatus = async (isOnline) => {
+    const userStatusRef = ref(db, `users/${currentUserId}/online`);
+    await update(userStatusRef, {
+        online: isOnline,
+        lastOnline: serverTimestamp()
+    });
+};
 
 // Load and display user profiles
 const loadUsers = () => {
@@ -42,7 +54,7 @@ const loadUsers = () => {
         userListContainer.innerHTML = "";
         snapshot.forEach((childSnapshot) => {
             const userData = childSnapshot.val();
-            if (userData.userId !== currentUserId) {
+            if (childSnapshot.key !== currentUserId) {
                 const userElement = createUserElement(childSnapshot.key, userData);
                 userListContainer.appendChild(userElement);
             }
@@ -141,6 +153,13 @@ const setupChatListeners = (userId, userData) => {
     const sendMessageBtn = document.getElementById('send-message-btn');
     const blockBtn = document.querySelector('.block-btn');
 
+    // Detect typing
+    messageInput.addEventListener('input', () => {
+        clearTimeout(typingTimer);
+        updateTypingStatus(userId, true);
+        typingTimer = setTimeout(() => updateTypingStatus(userId, false), 2000);
+    });
+
     // Send message
     sendMessageBtn.addEventListener('click', async () => {
         const content = messageInput.value.trim();
@@ -155,6 +174,7 @@ const setupChatListeners = (userId, userData) => {
 
         await push(chatRef, newMessage);
         messageInput.value = ""; // Clear input
+        updateTypingStatus(userId, false);
     });
 
     // Block/Unblock user
@@ -164,6 +184,12 @@ const setupChatListeners = (userId, userData) => {
         await update(userRef, { [currentUserId]: isBlocked ? null : true });
         blockBtn.textContent = isBlocked ? 'Block' : 'Unblock';
     });
+};
+
+// Update typing status
+const updateTypingStatus = async (userId, isTyping) => {
+    const typingStatusRef = ref(db, `users/${userId}/typing`);
+    await update(typingStatusRef, { [currentUserId]: isTyping });
 };
 
 // Search users
