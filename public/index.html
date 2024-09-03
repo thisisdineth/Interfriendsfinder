@@ -96,7 +96,7 @@
         }
 
         #menu {
-            display: flex;
+            display: none;
             gap: 20px;
         }
 
@@ -181,7 +181,7 @@
         /* Dock Menu */
         .dock {
             position: fixed;
-            bottom: 20px;
+            bottom: 0px;
             left: 50%;
             transform: translateX(-50%);
             display: flex;
@@ -217,6 +217,7 @@
             text-align: center;
             font-size: 14px;
             margin-top: auto;
+            display: none;
         }
 
         @media only screen and (max-width: 600px) {
@@ -313,7 +314,11 @@
 
         </div>
     </div>
-
+    <footer>
+        &copy; findaguest.online All rights reserved<br>
+        <a href="https://strangerchat.online/privacy/">Privacy policies</a> |
+        <a href="https://strangerchat.online/feedback/">User feedback</a>
+    </footer>
     <!-- MacBook Dock Menu -->
     <div class="dock">
         <a href="https://www.findaguest.online/" class="dock-icon">
@@ -339,11 +344,7 @@
         </a>
     </div>
 
-    <footer>
-        &copy; findaguest.online All rights reserved<br>
-        <a href="https://strangerchat.online/privacy/">Privacy policies</a> |
-        <a href="https://strangerchat.online/feedback/">User feedback</a>
-    </footer>
+   
 </body>
 
 </html>
