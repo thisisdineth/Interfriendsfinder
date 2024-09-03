@@ -8,6 +8,7 @@
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
     <link rel="manifest" href="/site.webmanifest">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <meta name="msapplication-TileColor" content="#da532c">
     <meta name="theme-color" content="#ffffff">
     <meta name="keywords"
@@ -69,7 +70,8 @@
             transition: all 0.3s ease;
             position: sticky;
             top: 0;
-            z-index: 1000; /* Ensure header stays on top */
+            z-index: 1000;
+            /* Ensure header stays on top */
         }
 
         #logo {
@@ -123,12 +125,14 @@
             box-shadow: 0 6px 20px rgba(3, 130, 43, 0.1);
             transition: box-shadow 0.3s ease;
         }
-#hero{
-    width: 1500px;
-    max-width: 1500px;
-    height: 720px;
 
-}
+        #hero {
+            width: 1500px;
+            max-width: 1500px;
+            height: 720px;
+
+        }
+
         #start-chat-section:hover {
             box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
         }
@@ -159,7 +163,8 @@
             display: flex;
             align-items: center;
             gap: 20px;
-            padding: 20px; /* Add padding for spacing */
+            padding: 20px;
+            /* Add padding for spacing */
         }
 
         .content-image {
@@ -169,7 +174,39 @@
 
         .content-text {
             flex: 1;
-            text-align: left; /* Align text to the left */
+            text-align: left;
+            /* Align text to the left */
+        }
+
+        /* Dock Menu */
+        .dock {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(10px);
+            padding: 10px 20px;
+            border-radius: 20px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Dock Icons */
+        .dock-icon {
+            text-align: center;
+            margin: 0 15px;
+            color: #333;
+            font-size: 24px;
+            transition: transform 0.3s ease;
+        }
+
+        .dock-icon:hover {
+            transform: scale(1.3);
+        }
+
+        .dock-icon i {
+            display: block;
         }
 
         footer {
@@ -201,10 +238,12 @@
             #logo {
                 height: 50px;
             }
-#hero{
-    max-width: 670px;
-    max-height: 400px;
-}
+
+            #hero {
+                max-width: 670px;
+                max-height: 400px;
+            }
+
             #site-title {
                 font-size: 28px;
                 margin-left: 0;
@@ -245,7 +284,8 @@
             <div id="site-title">Inter Friend Finder</div>
         </div>
         <nav id="menu">
-            <button id="translate-btn" onclick="window.location.href='https://strangerchat.online/about/'">About</button>
+            <button id="translate-btn"
+                onclick="window.location.href='https://strangerchat.online/about/'">About</button>
             <button id="translate-btn" onclick="window.location.href='https://blog.strangerchat.online'">Blog</button>
         </nav>
     </header>
@@ -264,11 +304,39 @@
     <div class="content-section">
         <img src="img/find.png" alt="Image Description" class="content-image">
         <div class="content-text">
-            <p style="margin-bottom: 15px;">Visit Inter Friend Finder EDU for get educatinal helps of find an Inteligent frind to talk about educational things<br>
-                <a href="edu/"><button style="color: #ffffff;background-color: #4f87f8; border-radius: 20px; width: 500px;height: 120px;font-size: 45px;">Visit Inter EDU</button></a>
+            <p style="margin-bottom: 15px;">Visit Inter Friend Finder EDU for get educatinal helps of find an Inteligent
+                frind to talk about educational things<br>
+                <a href="edu/"><button
+                        style="color: #ffffff;background-color: #4f87f8; border-radius: 20px; width: 500px;height: 120px;font-size: 45px;">Visit
+                        Inter EDU</button></a>
             </p>
 
         </div>
+    </div>
+
+    <!-- MacBook Dock Menu -->
+    <div class="dock">
+        <a href="https://www.findaguest.online/" class="dock-icon">
+            <i class="fas fa-home"></i>
+        </a>
+        <a href="https://www.findaguest.online/chats.html" class="dock-icon">
+            <i class="fa fa-comments" aria-hidden="true"></i>
+        </a>
+        <a href="https://findaguest.online/voice.html" class="dock-icon">
+            <i class="fa fa-microphone" aria-hidden="true"></i>
+        </a>
+        <a href="https://findaguest.online/video.html" class="dock-icon">
+            <i class="fa fa-video-camera" aria-hidden="true"></i>
+        </a>
+        <a href="https://findaguest.online/edu/index.html" class="dock-icon">
+            <i class="fa fa-book" aria-hidden="true"></i>
+        </a>
+        <a href="https://findaguest.online/edu/exp.html" class="dock-icon">
+            <i class="fa fa-envelope" aria-hidden="true"></i>
+        </a>
+        <a href="https://findaguest.online/edu/profile.html" class="dock-icon">
+            <i class="fa fa-user" aria-hidden="true"></i>
+        </a>
     </div>
 
     <footer>
