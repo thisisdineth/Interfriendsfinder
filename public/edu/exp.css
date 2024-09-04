@@ -129,7 +129,7 @@ header {
 
 .chat-container {
     width: 70%;
-    background: white;
+    background: rgb(187, 250, 255);
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     padding: 20px;
@@ -175,7 +175,7 @@ header {
 }
 
 .message.sent {
-    background-color: #007aff;
+    background-color: #298ffc;
     align-self: flex-end;
     border-top-right-radius: 0;
 }
@@ -202,7 +202,7 @@ header {
 }
 
 .message .ticks.read {
-    color: #1e88e5; /* Blue tick for read messages */
+    color: #2ccc08; /* Blue tick for read messages */
 }
 
 .message .options-container {
