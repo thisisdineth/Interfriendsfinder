@@ -109,7 +109,7 @@ const openChat = (userId, userData) => {
     chatContainer.innerHTML = `
         <div class="chat-header">
             <h3>${userData.name}</h3>
-            <span class="status">${userData.online ? 'Online' : `Last seen: ${new Date(userData.lastOnline).toLocaleString()}`}</span>
+            <span class="status">${userData.online ? 'Online' : `Last seen: ${new Date(userData.lastOnline).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`}</span>
             <button class="block-btn" data-id="${userId}">${userData.blockedBy && userData.blockedBy[currentUserId] ? 'Unblock' : 'Block'}</button>
         </div>
         <div class="chat-messages" id="chat-messages"></div>
@@ -132,10 +132,13 @@ const loadMessages = (userId) => {
         chatMessagesContainer.innerHTML = "";
         snapshot.forEach((childSnapshot) => {
             const messageData = childSnapshot.val();
-            const messageElement = createMessageElement(messageData, childSnapshot.key);
+            const messageElement = createMessageElement(messageData, childSnapshot.key, userId);
             chatMessagesContainer.appendChild(messageElement);
+
+            // Auto-scroll to the latest message
             chatMessagesContainer.scrollTop = chatMessagesContainer.scrollHeight;
 
+            // Play receive sound and mark message as seen
             if (messageData.senderId !== currentUserId && !messageData.seen) {
                 receiveSound.play();
                 update(ref(db, `chats/${getChatId(currentUserId, userId)}/${childSnapshot.key}`), {
@@ -147,15 +150,16 @@ const loadMessages = (userId) => {
 };
 
 // Create chat message element
-const createMessageElement = (messageData, messageId) => {
+const createMessageElement = (messageData, messageId, userId) => {
     const messageElement = document.createElement('div');
     messageElement.className = `message ${messageData.senderId === currentUserId ? 'sent' : 'received'}`;
     messageElement.innerHTML = `
         <p>${messageData.content}</p>
-        <span class="time">${new Date(messageData.timestamp).toLocaleString()}</span>
+        <span class="time">${new Date(messageData.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
+        <span class="ticks ${messageData.seen ? 'read' : ''}">${messageData.senderId === currentUserId ? '✔✔' : ''}</span>
         <div class="options">
             <button onclick="replyToMessage('${messageData.content}')">Reply</button>
-            <button onclick="deleteMessage('${messageId}', '${messageData.senderId}')">Delete</button>
+            <button onclick="deleteMessage('${messageId}', '${userId}')">Delete</button>
         </div>
     `;
     return messageElement;
@@ -210,9 +214,8 @@ const replyToMessage = (messageContent) => {
 };
 
 // Delete message
-const deleteMessage = async (messageId, senderId) => {
-    if (senderId !== currentUserId) return; // Only allow deleting your own messages
-    const chatRef = ref(db, `chats/${getChatId(currentUserId, senderId)}/${messageId}`);
+const deleteMessage = async (messageId, userId) => {
+    const chatRef = ref(db, `chats/${getChatId(currentUserId, userId)}/${messageId}`);
     await remove(chatRef);
 };
 
