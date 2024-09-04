@@ -1,6 +1,6 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
 import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
-import { getDatabase, ref, onValue, update, push, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-database.js";
+import { getDatabase, ref, onValue, update, push, serverTimestamp, remove } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-database.js";
 
 // Firebase configuration
 const firebaseConfig = {
@@ -22,6 +22,8 @@ const db = getDatabase(app);
 const userListContainer = document.getElementById('user-list');
 const chatContainer = document.getElementById('chat-container');
 const searchBar = document.getElementById('search-bar');
+const sendSound = document.getElementById('send-sound');
+const receiveSound = document.getElementById('receive-sound');
 
 // Store current user's ID
 let currentUserId = null;
@@ -130,19 +132,31 @@ const loadMessages = (userId) => {
         chatMessagesContainer.innerHTML = "";
         snapshot.forEach((childSnapshot) => {
             const messageData = childSnapshot.val();
-            const messageElement = createMessageElement(messageData);
+            const messageElement = createMessageElement(messageData, childSnapshot.key);
             chatMessagesContainer.appendChild(messageElement);
+            chatMessagesContainer.scrollTop = chatMessagesContainer.scrollHeight;
+
+            if (messageData.senderId !== currentUserId && !messageData.seen) {
+                receiveSound.play();
+                update(ref(db, `chats/${getChatId(currentUserId, userId)}/${childSnapshot.key}`), {
+                    seen: true
+                });
+            }
         });
     });
 };
 
 // Create chat message element
-const createMessageElement = (messageData) => {
+const createMessageElement = (messageData, messageId) => {
     const messageElement = document.createElement('div');
     messageElement.className = `message ${messageData.senderId === currentUserId ? 'sent' : 'received'}`;
     messageElement.innerHTML = `
         <p>${messageData.content}</p>
         <span class="time">${new Date(messageData.timestamp).toLocaleString()}</span>
+        <div class="options">
+            <button onclick="replyToMessage('${messageData.content}')">Reply</button>
+            <button onclick="deleteMessage('${messageId}', '${messageData.senderId}')">Delete</button>
+        </div>
     `;
     return messageElement;
 };
@@ -169,11 +183,13 @@ const setupChatListeners = (userId, userData) => {
         const newMessage = {
             content,
             senderId: currentUserId,
-            timestamp: serverTimestamp()
+            timestamp: serverTimestamp(),
+            seen: false
         };
 
         await push(chatRef, newMessage);
         messageInput.value = ""; // Clear input
+        sendSound.play();
         updateTypingStatus(userId, false);
     });
 
@@ -184,6 +200,20 @@ const setupChatListeners = (userId, userData) => {
         await update(userRef, { [currentUserId]: isBlocked ? null : true });
         blockBtn.textContent = isBlocked ? 'Block' : 'Unblock';
     });
+};
+
+// Reply to message
+const replyToMessage = (messageContent) => {
+    const messageInput = document.getElementById('message-input');
+    messageInput.value = `Replying to: ${messageContent}\n`;
+    messageInput.focus();
+};
+
+// Delete message
+const deleteMessage = async (messageId, senderId) => {
+    if (senderId !== currentUserId) return; // Only allow deleting your own messages
+    const chatRef = ref(db, `chats/${getChatId(currentUserId, senderId)}/${messageId}`);
+    await remove(chatRef);
 };
 
 // Update typing status
