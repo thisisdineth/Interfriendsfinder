@@ -134,7 +134,8 @@ header {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     padding: 20px;
     display: none;
-    overflow-y: auto; /* Ensure proper scrolling */
+    overflow-y: auto; /* Ensure proper vertical scrolling */
+    overflow-x: hidden; /* Prevent horizontal scrolling */
 }
 
 .chat-header {
@@ -165,11 +166,12 @@ header {
     margin-bottom: 10px;
     padding: 10px 15px;
     border-radius: 20px;
-    max-width: 60%;
+    max-width: 100%; /* Ensure messages do not exceed container width */
     position: relative;
     word-wrap: break-word;
     display: inline-block;
     color: white;
+    box-sizing: border-box; /* Include padding and border in width calculation */
 }
 
 .message.sent {
