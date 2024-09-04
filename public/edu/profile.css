@@ -1,12 +1,11 @@
 body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     background: linear-gradient(to right, #ffffff, #e3f2fd);
     margin: 0;
     padding: 0;
     display: flex;
     flex-direction: column;
     height: 100vh;
-    overflow-x: hidden;
 }
 
 header {
@@ -23,6 +22,7 @@ header {
     display: flex;
     align-items: center;
     gap: 10px;
+    display: none;
 }
 
 .logo {
@@ -125,7 +125,7 @@ nav ul li a:hover {
 }
 
 .profile-section button {
-    background: #42a5f5;
+    background: #fa490d;
     color: white;
     border: none;
     border-radius: 8px;
@@ -136,7 +136,7 @@ nav ul li a:hover {
 }
 
 .profile-section button:hover {
-    background: #1e88e5;
+    background: #e51e1e;
 }
 
 .tweets-section .tweet, .tweets-section .reply {
@@ -169,7 +169,7 @@ nav ul li a:hover {
 /* Dock Menu */
 .dock {
     position: fixed;
-    bottom: 20px;
+    bottom: 0px;
     left: 50%;
     transform: translateX(-50%);
     display: flex;
@@ -178,7 +178,9 @@ nav ul li a:hover {
     padding: 10px 20px;
     border-radius: 20px;
     box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    overflow-x: hidden;
 }
+
 
 /* Dock Icons */
 .dock-icon {
@@ -206,6 +208,7 @@ footer {
     position: relative;
     bottom: 0;
     width: 100%;
+    display: none;
 }
 
 /* Responsive styles */
