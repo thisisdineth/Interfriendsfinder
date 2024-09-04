@@ -113,6 +113,7 @@ const openChat = (userId, userData) => {
             <button class="block-btn" data-id="${userId}">${userData.blockedBy && userData.blockedBy[currentUserId] ? 'Unblock' : 'Block'}</button>
         </div>
         <div class="chat-messages" id="chat-messages"></div>
+        <div class="typing-indicator" id="typing-indicator"></div>
         <div class="chat-input">
             <textarea id="message-input" placeholder="Type a message..."></textarea>
             <button id="send-message-btn">Send</button>
@@ -157,9 +158,11 @@ const createMessageElement = (messageData, messageId, userId) => {
         <p>${messageData.content}</p>
         <span class="time">${new Date(messageData.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
         <span class="ticks ${messageData.seen ? 'read' : ''}">${messageData.senderId === currentUserId ? '✔✔' : ''}</span>
-        <div class="options">
-            <button onclick="replyToMessage('${messageData.content}')">Reply</button>
-            <button onclick="deleteMessage('${messageId}', '${userId}')">Delete</button>
+        <div class="options-container">
+            <div class="options">
+                <button onclick="replyToMessage('${messageData.content}')">Reply</button>
+                <button onclick="deleteMessage('${messageId}', '${userId}')">Delete</button>
+            </div>
         </div>
     `;
     return messageElement;
@@ -170,12 +173,23 @@ const setupChatListeners = (userId, userData) => {
     const messageInput = document.getElementById('message-input');
     const sendMessageBtn = document.getElementById('send-message-btn');
     const blockBtn = document.querySelector('.block-btn');
+    const typingIndicator = document.getElementById('typing-indicator');
 
     // Detect typing
     messageInput.addEventListener('input', () => {
         clearTimeout(typingTimer);
         updateTypingStatus(userId, true);
         typingTimer = setTimeout(() => updateTypingStatus(userId, false), 2000);
+    });
+
+    // Listen for typing indicator
+    const typingRef = ref(db, `users/${userId}/typing`);
+    onValue(typingRef, (snapshot) => {
+        if (snapshot.exists() && snapshot.val()[currentUserId]) {
+            typingIndicator.textContent = "typing...";
+        } else {
+            typingIndicator.textContent = "";
+        }
     });
 
     // Send message
