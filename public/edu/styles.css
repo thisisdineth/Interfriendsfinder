@@ -15,17 +15,20 @@ header {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    height: 2px;
 }
 
 .logo-container {
     display: flex;
     align-items: center;
     gap: 10px;
+    display: none;
 }
 
 .logo {
     height: 50px;
     width: auto;
+    display: none;
 }
 
 nav ul {
@@ -254,7 +257,7 @@ nav ul li a:hover {
 /* Dock Menu */
 .dock {
     position: fixed;
-    bottom: 20px;
+    bottom: 0px;
     left: 50%;
     transform: translateX(-50%);
     display: flex;
