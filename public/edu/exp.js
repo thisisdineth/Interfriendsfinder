@@ -18,16 +18,8 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getDatabase(app);
 
-// DOM Elements
-const userListContainer = document.getElementById('user-list');
-const chatContainer = document.getElementById('chat-container');
-const searchBar = document.getElementById('search-bar');
-const sendSound = document.getElementById('send-sound');
-const receiveSound = document.getElementById('receive-sound');
-
-// Store current user's ID
 let currentUserId = null;
-let typingTimer; // Timer to track typing status
+let typingTimer;
 
 // Initialize listeners
 onAuthStateChanged(auth, (user) => {
@@ -53,6 +45,7 @@ const updateOnlineStatus = async (isOnline) => {
 // Load and display user profiles
 const loadUsers = () => {
     onValue(ref(db, 'users'), (snapshot) => {
+        const userListContainer = document.getElementById('user-list');
         userListContainer.innerHTML = "";
         snapshot.forEach((childSnapshot) => {
             const userData = childSnapshot.val();
@@ -71,40 +64,36 @@ const createUserElement = (userId, userData) => {
     userElement.innerHTML = `
         <img src="${userData.photoURL || 'img/default-avatar.png'}" alt="${userData.name}'s Profile Picture">
         <div class="user-info">
-            <h3>${userData.name}</h3>
-            <p>Followers: ${userData.followers ? Object.keys(userData.followers).length : 0}</p>
+            <h3>${formatUserName(userData.name)}${getNewMessageCount(userId) > 0 ? ` <span class="new-msg">${getNewMessageCount(userId)} New</span>` : ''}</h3>
         </div>
-        <button class="follow-btn ${userData.followers && userData.followers[currentUserId] ? 'following' : ''}" data-id="${userId}">${userData.followers && userData.followers[currentUserId] ? 'Unfollow' : 'Follow'}</button>
-        <button class="message-btn" data-id="${userId}">Message</button>
     `;
-
-    // Follow/Unfollow button
-    userElement.querySelector('.follow-btn').addEventListener('click', () => toggleFollow(userId, userData));
-
-    // Message button
-    userElement.querySelector('.message-btn').addEventListener('click', () => openChat(userId, userData));
-
+    userElement.addEventListener('click', () => openChat(userId, userData));
     return userElement;
 };
 
-// Toggle follow/unfollow
-const toggleFollow = async (userId, userData) => {
-    const userRef = ref(db, `users/${userId}/followers`);
-    const currentUserRef = ref(db, `users/${currentUserId}/following`);
+// Format the user's name to show only the first two parts
+const formatUserName = (name) => {
+    const nameParts = name.split(" ");
+    return nameParts.slice(0, 2).join(" ");
+};
 
-    if (userData.followers && userData.followers[currentUserId]) {
-        // Unfollow
-        await update(userRef, { [currentUserId]: null });
-        await update(currentUserRef, { [userId]: null });
-    } else {
-        // Follow
-        await update(userRef, { [currentUserId]: true });
-        await update(currentUserRef, { [userId]: true });
-    }
+// Get the number of new messages for a user
+const getNewMessageCount = (userId) => {
+    let newMessageCount = 0;
+    const chatRef = ref(db, `chats/${getChatId(currentUserId, userId)}`);
+    onValue(chatRef, (snapshot) => {
+        snapshot.forEach((childSnapshot) => {
+            if (!childSnapshot.val().seen && childSnapshot.val().senderId !== currentUserId) {
+                newMessageCount++;
+            }
+        });
+    });
+    return newMessageCount;
 };
 
 // Open chat with selected user
 const openChat = (userId, userData) => {
+    const chatContainer = document.getElementById('chat-container');
     chatContainer.style.display = 'block';
     chatContainer.innerHTML = `
         <div class="chat-header">
@@ -119,7 +108,6 @@ const openChat = (userId, userData) => {
             <button id="send-message-btn">Send</button>
         </div>
     `;
-
     loadMessages(userId);
     setupChatListeners(userId, userData);
 };
@@ -141,11 +129,24 @@ const loadMessages = (userId) => {
 
             // Play receive sound and mark message as seen
             if (messageData.senderId !== currentUserId && !messageData.seen) {
+                const receiveSound = document.getElementById('receive-sound');
                 receiveSound.play();
                 update(ref(db, `chats/${getChatId(currentUserId, userId)}/${childSnapshot.key}`), {
                     seen: true
                 });
             }
+        });
+
+        // Attach event listeners to the reply and delete buttons after they are rendered
+        const replyButtons = chatMessagesContainer.querySelectorAll('.reply-btn');
+        const deleteButtons = chatMessagesContainer.querySelectorAll('.delete-btn');
+
+        replyButtons.forEach((button) => {
+            button.addEventListener('click', () => replyToMessage(button.dataset.messageContent));
+        });
+
+        deleteButtons.forEach((button) => {
+            button.addEventListener('click', () => deleteMessage(button.dataset.messageId, userId));
         });
     });
 };
@@ -160,12 +161,25 @@ const createMessageElement = (messageData, messageId, userId) => {
         <span class="ticks ${messageData.seen ? 'read' : ''}">${messageData.senderId === currentUserId ? '✔✔' : ''}</span>
         <div class="options-container">
             <div class="options">
-                <button onclick="replyToMessage('${messageData.content}')">Reply</button>
-                <button onclick="deleteMessage('${messageId}', '${userId}')">Delete</button>
+                <button class="reply-btn" data-message-content="${messageData.content}">Reply</button>
+                <button class="delete-btn" data-message-id="${messageId}">Delete</button>
             </div>
         </div>
     `;
     return messageElement;
+};
+
+// Reply to message
+const replyToMessage = (messageContent) => {
+    const messageInput = document.getElementById('message-input');
+    messageInput.value = `Replying to: ${messageContent}\n`;
+    messageInput.focus();
+};
+
+// Delete message
+const deleteMessage = (messageId, userId) => {
+    const chatRef = ref(db, `chats/${getChatId(currentUserId, userId)}/${messageId}`);
+    remove(chatRef);
 };
 
 // Setup chat listeners and functionalities
@@ -182,13 +196,15 @@ const setupChatListeners = (userId, userData) => {
         typingTimer = setTimeout(() => updateTypingStatus(userId, false), 2000);
     });
 
-    // Listen for typing indicator
-    const typingRef = ref(db, `users/${userId}/typing`);
+    // Listen for typing indicator from the other user
+    const typingRef = ref(db, `users/${currentUserId}/typing`);
     onValue(typingRef, (snapshot) => {
-        if (snapshot.exists() && snapshot.val()[currentUserId]) {
+        if (snapshot.exists() && snapshot.val()[userId]) {
             typingIndicator.textContent = "typing...";
+            typingIndicator.style.display = 'block';
         } else {
             typingIndicator.textContent = "";
+            typingIndicator.style.display = 'none';
         }
     });
 
@@ -207,6 +223,7 @@ const setupChatListeners = (userId, userData) => {
 
         await push(chatRef, newMessage);
         messageInput.value = ""; // Clear input
+        const sendSound = document.getElementById('send-sound');
         sendSound.play();
         updateTypingStatus(userId, false);
     });
@@ -218,19 +235,6 @@ const setupChatListeners = (userId, userData) => {
         await update(userRef, { [currentUserId]: isBlocked ? null : true });
         blockBtn.textContent = isBlocked ? 'Block' : 'Unblock';
     });
-};
-
-// Reply to message
-const replyToMessage = (messageContent) => {
-    const messageInput = document.getElementById('message-input');
-    messageInput.value = `Replying to: ${messageContent}\n`;
-    messageInput.focus();
-};
-
-// Delete message
-const deleteMessage = async (messageId, userId) => {
-    const chatRef = ref(db, `chats/${getChatId(currentUserId, userId)}/${messageId}`);
-    await remove(chatRef);
 };
 
 // Update typing status
