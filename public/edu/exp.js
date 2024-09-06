@@ -21,6 +21,8 @@ const db = getDatabase(app);
 let currentUserId = null;
 let typingTimer;
 
+const searchBar = document.getElementById('search-bar'); // Ensure searchBar is defined
+
 // Initialize listeners
 onAuthStateChanged(auth, (user) => {
     if (user) {
@@ -59,12 +61,13 @@ const loadUsers = () => {
 
 // Create user element
 const createUserElement = (userId, userData) => {
+    const newMessageCount = getNewMessageCount(userId);  // Ensure message count is calculated correctly
     const userElement = document.createElement('div');
     userElement.className = 'user-profile';
     userElement.innerHTML = `
         <img src="${userData.photoURL || 'img/default-avatar.png'}" alt="${userData.name}'s Profile Picture">
         <div class="user-info">
-            <h3>${formatUserName(userData.name)}${getNewMessageCount(userId) > 0 ? ` <span class="new-msg">${getNewMessageCount(userId)} New</span>` : ''}</h3>
+            <h3>${formatUserName(userData.name)}${newMessageCount > 0 ? ` <span class="new-msg">${newMessageCount} New</span>` : ''}</h3>
         </div>
     `;
     userElement.addEventListener('click', () => openChat(userId, userData));
@@ -157,13 +160,11 @@ const createMessageElement = (messageData, messageId, userId) => {
     messageElement.className = `message ${messageData.senderId === currentUserId ? 'sent' : 'received'}`;
     messageElement.innerHTML = `
         <p>${messageData.content}</p>
-        <span class="time">${new Date(messageData.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
-        <span class="ticks ${messageData.seen ? 'read' : ''}">${messageData.senderId === currentUserId ? '✔✔' : ''}</span>
-        <div class="options-container">
-            <div class="options">
-                <button class="reply-btn" data-message-content="${messageData.content}">Reply</button>
-                <button class="delete-btn" data-message-id="${messageId}">Delete</button>
-            </div>
+        <div class="message-meta">
+            <span class="time">${new Date(messageData.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
+            <span class="ticks ${messageData.seen ? 'read' : ''}">${messageData.senderId === currentUserId ? '✔✔' : ''}</span>
+            <button class="reply-btn" data-message-content="${messageData.content}">Reply</button>
+            <button class="delete-btn" data-message-id="${messageId}">Delete</button>
         </div>
     `;
     return messageElement;

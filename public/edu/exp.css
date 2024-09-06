@@ -1,4 +1,4 @@
-/* Updated CSS with a more modern design */
+/* Updated CSS with a more modern design and aligned buttons */
 
 body {
     font-family: 'Inter', sans-serif;
@@ -171,44 +171,31 @@ header {
     border-top-left-radius: 0;
 }
 
-.message .time {
-    font-size: 0.8em;
-    color: #d1d1d1;
-    margin-top: 5px;
-    display: block;
-    text-align: right;
-}
-
-.message .ticks {
-    display: inline-block;
-    margin-left: 5px;
-    font-size: 0.8em;
-    color: #d1d1d1;
-}
-
-.message .ticks.read {
-    color: #1e88e5;
-}
-
-.message .options-container {
+.message .message-meta {
     display: flex;
-    justify-content: flex-end;
-    gap: 10px;
+    align-items: center;
+    justify-content: space-between;
     margin-top: 5px;
 }
 
-.options button {
+.message .time, .message .ticks, .message .reply-btn, .message .delete-btn {
+    font-size: 0.8em;
+    color: #d1d1d1;
+    margin-top: 5px;
+}
+
+.message .reply-btn, .message .delete-btn {
     background: none;
     border: none;
     cursor: pointer;
     font-size: 0.9em;
     padding: 5px;
+    color: white;
     border-radius: 5px;
     transition: background 0.2s ease;
-    color: #555;
 }
 
-.options button:hover {
+.message .reply-btn:hover, .message .delete-btn:hover {
     background: #ddd;
     color: black;
 }
