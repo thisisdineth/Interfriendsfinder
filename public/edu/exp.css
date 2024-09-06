@@ -35,6 +35,9 @@ header {
 .app-name {
     font-size: 1.5em;
 }
+.errortext{
+    display: none;
+}
 
 #search-bar {
     padding: 8px 12px;
@@ -287,6 +290,7 @@ header {
     .container {
         padding: 10px;
         flex-direction: column;
+        display: none;
     }
 
     .user-list,
@@ -317,5 +321,9 @@ header {
 
     .message {
         max-width: 80%;
+    }
+    .errortext{
+        display: contents;
+        margin-top: 0px;
     }
 }
