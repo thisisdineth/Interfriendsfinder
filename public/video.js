@@ -61,6 +61,8 @@ function setActiveUser() {
     set(activeUsersRef, {
         uid: currentUser.uid,
         timestamp: new Date().toISOString()
+    }).catch((error) => {
+        console.error("Error setting active user in Firebase:", error);
     });
 
     onValue(ref(db, 'videoActiveUsers'), (snapshot) => {
@@ -68,7 +70,9 @@ function setActiveUser() {
         document.getElementById('active-user-count').textContent = activeUsers;
     });
 
-    onDisconnect(activeUsersRef).remove();
+    onDisconnect(activeUsersRef).remove().catch((error) => {
+        console.error("Error during disconnection cleanup:", error);
+    });
 }
 
 // Update local time display
@@ -87,6 +91,7 @@ async function startLocalStream() {
         document.getElementById('toggle-video-btn').disabled = false;
     } catch (error) {
         console.error("Error accessing media devices.", error);
+        alert("Could not access your camera or microphone. Please check your permissions.");
     }
 }
 
@@ -98,57 +103,81 @@ async function findNewGuest() {
         endVideoChat();
     }
 
-    peerConnection = new RTCPeerConnection(servers);
-    peerConnection.onicecandidate = handleICECandidateEvent;
-    peerConnection.ontrack = handleTrackEvent;
+    try {
+        peerConnection = new RTCPeerConnection(servers);
+        peerConnection.onicecandidate = handleICECandidateEvent;
+        peerConnection.ontrack = handleTrackEvent;
 
-    const activeUsersRef = ref(db, 'videoActiveUsers');
-    const activeUsersSnapshot = await get(activeUsersRef);
-    const activeUsers = activeUsersSnapshot.exists() ? Object.keys(activeUsersSnapshot.val()).filter(uid => uid !== currentUser.uid) : [];
-    
-    if (activeUsers.length > 0) {
-        partnerUid = activeUsers[Math.floor(Math.random() * activeUsers.length)];
-        const videoRoomsRef = ref(db, 'videoRooms');
-        const newVideoRoomRef = push(videoRoomsRef);
-        currentVideoRoom = newVideoRoomRef.key;
+        const activeUsersRef = ref(db, 'videoActiveUsers');
+        const activeUsersSnapshot = await get(activeUsersRef);
+        const activeUsers = activeUsersSnapshot.exists() ? Object.keys(activeUsersSnapshot.val()).filter(uid => uid !== currentUser.uid) : [];
+        
+        if (activeUsers.length > 0) {
+            partnerUid = activeUsers[Math.floor(Math.random() * activeUsers.length)];
+            const videoRoomsRef = ref(db, 'videoRooms');
+            const newVideoRoomRef = push(videoRoomsRef);
+            currentVideoRoom = newVideoRoomRef.key;
 
-        await set(newVideoRoomRef, {
-            users: [currentUser.uid, partnerUid],
-        });
+            await set(newVideoRoomRef, {
+                users: [currentUser.uid, partnerUid],
+            });
 
-        setupWebRTC(newVideoRoomRef);
-        startLocalStream();
+            setupWebRTC(newVideoRoomRef);
+            startLocalStream();
 
-        document.getElementById('leave-chat-btn').disabled = false;
-        document.getElementById('find-new-user-btn').disabled = true;
-    } else {
-        alert("No other active users found. Please try again later.");
-        showLoading(false);  // Hide loading if no users are found
+            document.getElementById('leave-chat-btn').disabled = false;
+            document.getElementById('find-new-user-btn').disabled = true;
+        } else {
+            alert("No other active users found. Please try again later.");
+            showLoading(false);  // Hide loading if no users are found
+        }
+    } catch (error) {
+        console.error("Error finding a new guest:", error);
+        alert("An error occurred while trying to find a new guest. Please try again.");
+        showLoading(false);
     }
 }
 
-// Setup WebRTC and handle offer/answer exchange
+// Modularized WebRTC setup function
 async function setupWebRTC(roomRef) {
-    const roomSnapshot = await get(roomRef);
+    try {
+        const roomSnapshot = await get(roomRef);
 
-    if (roomSnapshot.exists()) {
-        const roomData = roomSnapshot.val();
-        if (roomData.offer) {
-            console.log("Setting remote description with received offer.");
-            await peerConnection.setRemoteDescription(new RTCSessionDescription(roomData.offer));
-            const answer = await peerConnection.createAnswer();
-            await peerConnection.setLocalDescription(answer);
-            console.log("Sending answer.");
-            await set(ref(db, `${roomRef.key}/answer`), answer);
-        } else {
-            console.log("Creating offer.");
-            const offer = await peerConnection.createOffer();
-            await peerConnection.setLocalDescription(offer);
-            console.log("Sending offer.");
-            await set(ref(db, `${roomRef.key}/offer`), offer);
+        if (roomSnapshot.exists()) {
+            const roomData = roomSnapshot.val();
+            if (roomData.offer) {
+                await handleReceivedOffer(roomData.offer, roomRef);
+            } else {
+                await createAndSendOffer(roomRef);
+            }
         }
-    }
 
+        monitorAnswer(roomRef);
+        monitorICECandidates(roomRef);
+    } catch (error) {
+        console.error("Error during WebRTC setup:", error);
+    }
+}
+
+async function handleReceivedOffer(offer, roomRef) {
+    console.log("Setting remote description with received offer.");
+    await peerConnection.setRemoteDescription(new RTCSessionDescription(offer));
+    const answer = await peerConnection.createAnswer();
+    await peerConnection.setLocalDescription(answer);
+    console.log("Sending answer.");
+    await set(ref(db, `${roomRef.key}/answer`), answer);
+}
+
+async function createAndSendOffer(roomRef) {
+    console.log("Creating offer.");
+    const offer = await peerConnection.createOffer();
+    await peerConnection.setLocalDescription(offer);
+    console.log("Sending offer.");
+    await set(ref(db, `${roomRef.key}/offer`), offer);
+}
+
+// Monitor for answer from the partner
+function monitorAnswer(roomRef) {
     onValue(ref(db, `${roomRef.key}/answer`), async (snapshot) => {
         if (snapshot.exists() && !peerConnection.currentRemoteDescription) {
             console.log("Setting remote description with received answer.");
@@ -156,7 +185,10 @@ async function setupWebRTC(roomRef) {
             await peerConnection.setRemoteDescription(new RTCSessionDescription(answer));
         }
     });
+}
 
+// Monitor ICE candidates
+function monitorICECandidates(roomRef) {
     onValue(ref(db, `${roomRef.key}/iceCandidates`), (snapshot) => {
         if (snapshot.exists()) {
             snapshot.forEach(async (iceSnapshot) => {
@@ -177,7 +209,9 @@ function handleICECandidateEvent(event) {
     if (event.candidate) {
         console.log("Sending ICE candidate.");
         const roomRef = ref(db, `videoRooms/${currentVideoRoom}/iceCandidates`);
-        set(push(roomRef), event.candidate);
+        set(push(roomRef), event.candidate).catch((error) => {
+            console.error("Error sending ICE candidate:", error);
+        });
     }
 }
 
