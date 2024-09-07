@@ -87,8 +87,16 @@ async function startLocalStream() {
         localStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
         const localVideo = document.getElementById('local-video');
         localVideo.srcObject = localStream;
+
         document.getElementById('find-new-user-btn').disabled = false;
         document.getElementById('toggle-video-btn').disabled = false;
+
+        if (peerConnection) {
+            // Add local stream tracks to peer connection
+            localStream.getTracks().forEach(track => {
+                peerConnection.addTrack(track, localStream);
+            });
+        }
     } catch (error) {
         console.error("Error accessing media devices.", error);
         alert("Could not access your camera or microphone. Please check your permissions.");
@@ -218,9 +226,11 @@ function handleICECandidateEvent(event) {
 function handleTrackEvent(event) {
     console.log("Received remote track.");
     const remoteVideo = document.getElementById('remote-video');
-    remoteVideo.srcObject = event.streams[0];
-    showLoading(false);  // Hide loading and show video once connected
+    if (remoteVideo) {
+        remoteVideo.srcObject = event.streams[0]; // Ensure the first stream is used
+    }
     document.getElementById('status').textContent = "Stranger successfully connected!";
+    showLoading(false);  // Hide loading once connected
 }
 
 // End the video chat and stop the local stream
