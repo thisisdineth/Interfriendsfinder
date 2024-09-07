@@ -58,10 +58,10 @@ nav ul li a:hover {
 }
 
 .tweet-form {
-    background: white;
+    
     padding: 20px;
     border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    
     margin-bottom: 30px;
     max-width: 100%;
 }
@@ -75,6 +75,7 @@ nav ul li a:hover {
     font-size: 1em;
     max-width: 97%;
     width: 97%;
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
 }
 
 .tweet-form button {
@@ -86,6 +87,7 @@ nav ul li a:hover {
     font-size: 1em;
     cursor: pointer;
     transition: background 0.3s ease;
+    width: 100%;
 }
 
 .tweet-form button:hover {
