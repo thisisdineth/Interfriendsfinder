@@ -281,7 +281,33 @@ body {
 #skip-btn:hover {
     background-color: #d00739;
 }
+#mobmenu {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.1); /* Glass-like transparency */
+    backdrop-filter: blur(10px); /* Blur effect */
+    padding: 10px;
+    border-radius: 15px; /* Rounded corners for the glass look */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Soft shadow for depth */
+}
 
+#mobmenu a {
+    margin: 0 10px;
+    color: rgb(0, 0, 0); /* Icon color */
+    font-size: 24px;
+    text-decoration: none;
+}
+
+#mobmenu a:hover {
+    color: #ff0000; /* Icon hover effect */
+}
+
+.icon {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
 #status {
     text-align: center;
     padding: 5px;
@@ -385,6 +411,35 @@ body {
 
     #status {
         font-size: 10px;
+    }
+    #mobmenu {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background: rgba(255, 255, 255, 0.1); /* Glass-like transparency */
+        backdrop-filter: blur(10px); /* Blur effect */
+        padding: 10px;
+        border-radius: 15px; /* Rounded corners for the glass look */
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Soft shadow for depth */
+        height: 3px;
+    }
+    
+    #mobmenu a {
+        margin: 0 10px;
+        color: rgb(0, 0, 0); /* Icon color */
+        font-size: 15px;
+        text-decoration: none;
+        
+    }
+    
+    #mobmenu a:hover {
+        color: #ff0000; /* Icon hover effect */
+    }
+    
+    .icon {
+        display: flex;
+        justify-content: center;
+        align-items: center;
     }
     #voice-message-controls {
         flex-direction: column;
