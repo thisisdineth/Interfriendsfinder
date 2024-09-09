@@ -315,7 +315,7 @@ const addTweetEventListeners = (tweetElement, tweetId) => {
                         content: replyContent,
                         author: `${userData.name} (${userData.role})`,
                         username: userData.username,
-                        photoURL: userData.photoURL || "default-profile.png",
+                        photoURL: userData.photoURL || "img/default-avatar.png",
                         bio: userData.bio || "",
                         userId: user.uid,
                         timestamp: new Date().toISOString(),
