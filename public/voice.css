@@ -34,7 +34,27 @@ body {
     text-align: center;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
 }
+#mobmenu {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.1); /* Glass-like transparency */
+    backdrop-filter: blur(10px); /* Blur effect */
+    padding: 10px;
+    border-radius: 15px; /* Rounded corners for the glass look */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Soft shadow for depth */
+}
 
+#mobmenu a {
+    margin: 0 10px;
+    color: rgb(0, 0, 0); /* Icon color */
+    font-size: 24px;
+    text-decoration: none;
+}
+
+#mobmenu a:hover {
+    color: #ff0000; /* Icon hover effect */
+}
 #logo {
     height: 30px;
     margin-right: 10px;
