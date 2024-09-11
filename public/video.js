@@ -81,7 +81,7 @@ function updateLocalTime() {
     document.getElementById('local-time').textContent = now.toLocaleTimeString();
 }
 
-// Start local stream and setup WebRTC
+// Start local stream and setup WebRTC This is not working yet
 async function startLocalStream() {
     try {
         localStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });

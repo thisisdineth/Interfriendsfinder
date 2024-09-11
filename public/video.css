@@ -52,7 +52,7 @@ body {
 #video-box {
     position: relative;
     width: 48%;
-    padding-bottom: 27%; /* Maintain aspect ratio */
+    padding-bottom: 27%; 
 }
 
 #local-video, #remote-video {
@@ -107,7 +107,7 @@ button:disabled {
     background-color: #888;
     cursor: not-allowed;
 }
-/* Dock Menu */
+
 .dock {
     position: fixed;
     bottom: 20px;
@@ -121,7 +121,7 @@ button:disabled {
     box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
 }
 
-/* Dock Icons */
+
 .dock-icon {
     text-align: center;
     margin: 0 15px;
@@ -147,7 +147,7 @@ button:disabled {
     text-align: center;
 }
 
-/* Mobile View */
+
 @media (max-width: 600px) {
     #header {
         width: 100%;

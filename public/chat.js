@@ -374,8 +374,8 @@ async function leaveChatRoom() {
 
 // Bad word filter function
 function filterBadWords(message) {
-    const badWords = ["fuck", "shit", "bitch", "boobs", "pussy"];
-    const replacement = '*';
+    const badWords = ["fuck", "shit", "bitch"];
+    const replacement = '-';
 
     return message.split(' ').map(word => {
         let cleanedWord = word.toLowerCase();

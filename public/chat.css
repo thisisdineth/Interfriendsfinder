@@ -25,15 +25,15 @@ body {
 #local-time {
     color: white;
     background-color: #0288d1;
-    padding: 15px 30px; /* Increase padding for a larger background */
-    font-size: 24px; /* Adjust font size as needed */
-    background-size: 40px; /* Increase the background size */
+    padding: 15px 30px; 
+    font-size: 24px; 
+    background-size: 40px; 
     border-end-end-radius: 20px;
-    border-start-start-radius: 20px; /* Add matching rounded corners on the opposite side */
-    width: fit-content; /* Ensure the element fits its content */
-    margin: 20px auto; /* Center the element horizontally with some margin */
-    text-align: center; /* Center the text inside the element */
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* Optional: Add a subtle shadow for depth */
+    border-start-start-radius: 20px; 
+    width: fit-content; 
+    margin: 20px auto; 
+    text-align: center; 
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
 }
 
 #logo {
@@ -47,11 +47,11 @@ body {
     background-color: #6dd102;
     padding: 10px 20px;
     background-size: 40px;
-    border-radius: 15px; /* Round the corners */
+    border-radius: 15px; 
     width: fit-content;
-    margin: 10px auto; /* Center it horizontally with some top margin */
-    text-align: center; /* Center the text */
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* Add a subtle shadow */
+    margin: 10px auto; 
+    text-align: center; 
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); 
 }
 
 #voice-toggle-btn-container {
@@ -285,22 +285,22 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    background: rgba(255, 255, 255, 0.1); /* Glass-like transparency */
-    backdrop-filter: blur(10px); /* Blur effect */
+    background: rgba(255, 255, 255, 0.1); 
+    backdrop-filter: blur(10px); 
     padding: 10px;
-    border-radius: 15px; /* Rounded corners for the glass look */
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Soft shadow for depth */
+    border-radius: 15px; 
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); 
 }
 
 #mobmenu a {
     margin: 0 10px;
-    color: rgb(0, 0, 0); /* Icon color */
+    color: rgb(0, 0, 0);
     font-size: 24px;
     text-decoration: none;
 }
 
 #mobmenu a:hover {
-    color: #ff0000; /* Icon hover effect */
+    color: #ff0000; 
 }
 
 .icon {
@@ -313,7 +313,7 @@ body {
     padding: 5px;
     font-size: 12px;
 }
-/* Dock Menu */
+
 .dock {
     position: fixed;
     bottom: 20px;
@@ -327,7 +327,7 @@ body {
     box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
 }
 
-/* Dock Icons */
+
 .dock{
     left: 10%;
     bottom: 0;
@@ -348,23 +348,23 @@ body {
     display: block;
 }
 
-/* Mobile view adjustments */
+
 @media (max-width: 600px) {
     #header {
         padding: 10px;
     }
     #local-time {
-        padding: 10px 20px; /* Reduce padding for mobile */
-        font-size: 18px; /* Smaller font size for mobile */
-        border-end-end-radius: 15px; /* Slightly reduce the border radius */
-        border-start-start-radius: 15px; /* Matching radius for the other corner */
-        background-size: 30px; /* Reduce background size */
+        padding: 10px 20px; 
+        font-size: 18px; 
+        border-end-end-radius: 15px; 
+        border-start-start-radius: 15px; 
+        background-size: 30px; 
     }
     #active-users {
-        padding: 8px 16px; /* Slightly reduce padding for mobile */
-        font-size: 12px; /* Make font size smaller for mobile */
-        border-radius: 10px; /* Reduce border radius for mobile */
-        background-size: 30px; /* Adjust background size for mobile */
+        padding: 8px 16px; 
+        font-size: 12px; 
+        border-radius: 10px; 
+        background-size: 30px; 
     }
     #logo {
         height: 20px;
@@ -416,24 +416,24 @@ body {
         display: flex;
         justify-content: center;
         align-items: center;
-        background: rgba(255, 255, 255, 0.1); /* Glass-like transparency */
-        backdrop-filter: blur(10px); /* Blur effect */
+        background: rgba(255, 255, 255, 0.1); 
+        backdrop-filter: blur(10px); 
         padding: 10px;
-        border-radius: 15px; /* Rounded corners for the glass look */
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Soft shadow for depth */
+        border-radius: 15px; 
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); 
         height: 3px;
     }
     
     #mobmenu a {
         margin: 0 10px;
-        color: rgb(0, 0, 0); /* Icon color */
+        color: rgb(0, 0, 0);
         font-size: 15px;
         text-decoration: none;
         
     }
     
     #mobmenu a:hover {
-        color: #ff0000; /* Icon hover effect */
+        color: #ff0000; 
     }
     
     .icon {
