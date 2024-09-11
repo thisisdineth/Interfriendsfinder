@@ -182,7 +182,7 @@ button:hover {
 button:active {
     transform: scale(0.98);
 }
-/* Dock Menu */
+
 .dock {
     position: fixed;
     bottom: 0px;
@@ -196,7 +196,7 @@ button:active {
     box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
 }
 
-/* Dock Icons */
+
 .dock-icon {
     text-align: center;
     margin: 0 15px;
