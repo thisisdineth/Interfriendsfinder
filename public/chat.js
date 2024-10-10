@@ -1,6 +1,7 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
 import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
 import { getDatabase, ref, set, get, push, onValue, remove, serverTimestamp, onDisconnect } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-database.js";
+import { filterBadWords } from './badword.js';  // Import the bad words filtering function
 
 // Initialize Firebase
 const firebaseConfig = {
@@ -206,14 +207,14 @@ function listenForMessages() {
             // Add the message text with bad word filtering and math formatting
             const messageText = document.createElement('div');
             messageText.classList.add('message-text');
-            messageText.innerHTML = filterBadWords(formatMathExpression(messageData.message));
+            messageText.innerHTML = filterBadWords(formatMathExpression(messageData.message));  // Use the new filter function
             messageElement.appendChild(messageText);
 
             // Show reply if exists
             if (messageData.replyTo) {
                 const replyElement = document.createElement('div');
                 replyElement.classList.add('reply');
-                replyElement.innerHTML = `Replying to: ${filterBadWords(formatMathExpression(messageData.replyTo.message))}`;
+                replyElement.innerHTML = `Replying to: ${filterBadWords(formatMathExpression(messageData.replyTo.message))}`;  // Use the new filter function
                 messageElement.appendChild(replyElement);
             }
 
@@ -230,7 +231,7 @@ function listenForMessages() {
             const replyButton = document.createElement('button');
             replyButton.classList.add('reply-btn', 'hidden');
             replyButton.textContent = 'Reply';
-            replyButton.addEventListener('click', () => setReplyTo(filterBadWords(formatMathExpression(messageData.message))));
+            replyButton.addEventListener('click', () => setReplyTo(filterBadWords(formatMathExpression(messageData.message))));  // Use the new filter function
             messageElement.appendChild(replyButton);
 
             // Show buttons on hover or click
@@ -314,7 +315,7 @@ function sendMessage() {
 
         set(newMessageRef, {
             uid: currentUser.uid,
-            message: filterBadWords(formatMathExpression(chatInput)),
+            message: filterBadWords(formatMathExpression(chatInput)),  // Use the new filter function
             replyTo: replyMessageId ? { message: replyMessageId } : null,
             timestamp: serverTimestamp()
         }).then(() => {
@@ -372,22 +373,7 @@ async function leaveChatRoom() {
     }
 }
 
-// Bad word filter function
-function filterBadWords(message) {
-    const badWords = ["fuck", "shit", "bitch"];
-    const replacement = '-';
-
-    return message.split(' ').map(word => {
-        let cleanedWord = word.toLowerCase();
-        badWords.forEach(badWord => {
-            const regex = new RegExp(badWord, 'gi');
-            cleanedWord = cleanedWord.replace(regex, match => {
-                return match[0] + replacement.repeat(match.length - 1);
-            });
-        });
-        return cleanedWord;
-    }).join(' ');
-}
+// Bad word filter is now handled by badword.js
 
 // Format math expressions into a readable format
 function formatMathExpression(input) {
