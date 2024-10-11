@@ -32,12 +32,4 @@ export function filterBadWords(message) {
     return message.replace(pattern, (match) => '*'.repeat(match.replace(/\s+/g, '').length));
 }
 
-// Example usage
-const exampleMessage1 = "This is a F U C K example!";
-const exampleMessage2 = "You are so horny!";
-const exampleMessage3 = "Let's make love tonight.";
-const exampleMessage4 = "What a beautiful day!";
-console.log(filterBadWords(exampleMessage1)); // Output: "This is a **** example!"
-console.log(filterBadWords(exampleMessage2)); // Output: "You are so *****!"
-console.log(filterBadWords(exampleMessage3)); // Output: "Let's **** **** tonight."
-console.log(filterBadWords(exampleMessage4)); // Output: "What a beautiful day!"
+
