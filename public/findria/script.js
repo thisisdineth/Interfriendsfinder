@@ -9,8 +9,11 @@ let userMessage = null;
 let isResponseGenerating = false;
 
 // API configuration
-const API_KEY = process.env.API_KEY; // Ensure to use this in your build setup
+const API_KEY = process.env.NEXT_PUBLIC_API_KEY; // Access the API key from environment variable
 const API_URL = `https://generativelanguage.googleapis.com/v1/models/gemini-pro:generateContent?key=${API_KEY}`;
+
+// ... rest of your code
+
 
 
 // Load theme and chat data from local storage on page load
