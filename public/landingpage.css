@@ -123,6 +123,22 @@ header ul li a:hover {
     background: linear-gradient(120deg, #6a85b6, #bac8e0);
     border: none;
 }
+.textintro h1{
+    color: #0b2e70;
+    text-align: center;
+    font-size: 25px;
+    margin-top: 5%;
+    padding: 5px;
+}
+
+.textintro p{
+    color: #0b214b;
+    text-align: center;
+    font-size: 15px;
+    margin-top: 5%;
+    padding: 5px;
+    margin-bottom: 5%;
+}
 
 .content-container {
     opacity: 0;
