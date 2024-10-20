@@ -29,7 +29,7 @@ export function filterBadWords(message) {
     );
 
     // Replace the bad words with asterisks, ignoring spaces
-    return message.replace(pattern, (match) => '*'.repeat(match.replace(/\s+/g, '').length));
+    return message.replace(pattern, (match) => '🚫'.repeat(match.replace(/\s+/g, '').length));
 }
 
 
