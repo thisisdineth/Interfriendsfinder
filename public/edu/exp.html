@@ -26,11 +26,25 @@
         </div>
         <div class="chat-container" id="chat-container">
             <!-- Chat box will be dynamically loaded here -->
+            <div class="chat-header">
+                <h3 id="chat-title">Chat with User</h3>
+                <span class="status">Online</span>
+            </div>
+            <div class="chat-messages" id="chat-messages">
+                <!-- Messages will be dynamically loaded here -->
+            </div>
+            <div class="typing-indicator" id="typing-indicator">User is typing...</div>
+            <div class="chat-input">
+                <textarea id="message-input" placeholder="Type a message..."></textarea>
+                <input type="file" id="file-input" accept="image/*,audio/*,video/*">
+                <button id="send-message-btn">Send</button>
+                <button id="send-voice-btn">Record Voice</button>
+            </div>
         </div>
     </div>
     <div class="errortext">
-        <h1>Sorry Mobile view not avlabile yet! ..
-            Use Desktop or enble desktop mode to see chats</h1>
+        <h1>Sorry, mobile view not available yet! ..
+            Use Desktop or enable desktop mode to see chats</h1>
     </div>
     <!-- MacBook Dock Menu -->
     <div class="dock">
@@ -59,6 +73,7 @@
     <!-- Sound Effects -->
     <audio id="send-sound" src="sound/sent.mp3"></audio>
     <audio id="receive-sound" src="sound/get.mp3"></audio>
+    
     <script type="module" src="exp.js"></script>
 </body>
 </html>

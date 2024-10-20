@@ -1,6 +1,7 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
 import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
 import { getDatabase, ref, onValue, update, push, serverTimestamp, remove } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-database.js";
+import { getStorage, ref as storageRef, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-storage.js";
 
 // Firebase configuration
 const firebaseConfig = {
@@ -17,6 +18,7 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getDatabase(app);
+const storage = getStorage(app);
 
 let currentUserId = null;
 let typingTimer;
@@ -108,7 +110,9 @@ const openChat = (userId, userData) => {
         <div class="typing-indicator" id="typing-indicator"></div>
         <div class="chat-input">
             <textarea id="message-input" placeholder="Type a message..."></textarea>
+            <input type="file" id="file-input" accept="image/*">
             <button id="send-message-btn">Send</button>
+            <button id="send-voice-btn">Record Voice</button>
         </div>
     `;
     loadMessages(userId);
@@ -158,8 +162,19 @@ const loadMessages = (userId) => {
 const createMessageElement = (messageData, messageId, userId) => {
     const messageElement = document.createElement('div');
     messageElement.className = `message ${messageData.senderId === currentUserId ? 'sent' : 'received'}`;
+    
+    // Determine the type of message and format accordingly
+    let messageContent;
+    if (messageData.type === 'text') {
+        messageContent = `<p>${messageData.content}</p>`;
+    } else if (messageData.type === 'image') {
+        messageContent = `<img src="${messageData.content}" alt="Image" class="message-image">`;
+    } else if (messageData.type === 'voice') {
+        messageContent = `<audio controls src="${messageData.content}">Your browser does not support the audio element.</audio>`;
+    }
+
     messageElement.innerHTML = `
-        <p>${messageData.content}</p>
+        ${messageContent}
         <div class="message-meta">
             <span class="time">${new Date(messageData.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
             <span class="ticks ${messageData.seen ? 'read' : ''}">${messageData.senderId === currentUserId ? '✔✔' : ''}</span>
@@ -187,6 +202,8 @@ const deleteMessage = (messageId, userId) => {
 const setupChatListeners = (userId, userData) => {
     const messageInput = document.getElementById('message-input');
     const sendMessageBtn = document.getElementById('send-message-btn');
+    const sendVoiceBtn = document.getElementById('send-voice-btn');
+    const fileInput = document.getElementById('file-input');
     const blockBtn = document.querySelector('.block-btn');
     const typingIndicator = document.getElementById('typing-indicator');
 
@@ -209,7 +226,7 @@ const setupChatListeners = (userId, userData) => {
         }
     });
 
-    // Send message
+    // Send text message
     sendMessageBtn.addEventListener('click', async () => {
         const content = messageInput.value.trim();
         if (content === "") return;
@@ -219,7 +236,8 @@ const setupChatListeners = (userId, userData) => {
             content,
             senderId: currentUserId,
             timestamp: serverTimestamp(),
-            seen: false
+            seen: false,
+            type: 'text' // Specify type
         };
 
         await push(chatRef, newMessage);
@@ -227,6 +245,52 @@ const setupChatListeners = (userId, userData) => {
         const sendSound = document.getElementById('send-sound');
         sendSound.play();
         updateTypingStatus(userId, false);
+    });
+
+    // Send voice message
+    sendVoiceBtn.addEventListener('click', async () => {
+        const audioBlob = await recordAudio();
+        if (audioBlob) {
+            const audioRef = storageRef(storage, `voiceMessages/${Date.now()}.wav`);
+            await uploadBytes(audioRef, audioBlob);
+            const audioURL = await getDownloadURL(audioRef);
+
+            const chatRef = ref(db, `chats/${getChatId(currentUserId, userId)}`);
+            const newMessage = {
+                content: audioURL,
+                senderId: currentUserId,
+                timestamp: serverTimestamp(),
+                seen: false,
+                type: 'voice' // Specify type
+            };
+
+            await push(chatRef, newMessage);
+            const sendSound = document.getElementById('send-sound');
+            sendSound.play();
+            updateTypingStatus(userId, false);
+        }
+    });
+
+    // Upload image message
+    fileInput.addEventListener('change', async (event) => {
+        const file = event.target.files[0];
+        if (file) {
+            const imageRef = storageRef(storage, `images/${Date.now()}_${file.name}`);
+            await uploadBytes(imageRef, file);
+            const imageURL = await getDownloadURL(imageRef);
+
+            const chatRef = ref(db, `chats/${getChatId(currentUserId, userId)}`);
+            const newMessage = {
+                content: imageURL,
+                senderId: currentUserId,
+                timestamp: serverTimestamp(),
+                seen: false,
+                type: 'image' // Specify type
+            };
+
+            await push(chatRef, newMessage);
+            event.target.value = ""; // Clear input
+        }
     });
 
     // Block/Unblock user
@@ -258,3 +322,37 @@ searchBar.addEventListener('input', (e) => {
         profile.style.display = userName.includes(searchTerm) ? 'flex' : 'none';
     });
 });
+
+// Function to record audio
+const recordAudio = () => {
+    return new Promise((resolve, reject) => {
+        navigator.mediaDevices.getUserMedia({ audio: true })
+            .then((stream) => {
+                const mediaRecorder = new MediaRecorder(stream);
+                const audioChunks = [];
+
+                mediaRecorder.start();
+
+                const stopRecording = () => {
+                    mediaRecorder.stop();
+                    stream.getTracks().forEach(track => track.stop());
+                };
+
+                mediaRecorder.ondataavailable = (event) => {
+                    audioChunks.push(event.data);
+                };
+
+                mediaRecorder.onstop = () => {
+                    const audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
+                    resolve(audioBlob);
+                };
+
+                // Stop recording after 5 seconds (adjust as needed)
+                setTimeout(stopRecording, 5000);
+            })
+            .catch((error) => {
+                console.error('Error accessing microphone:', error);
+                reject(error);
+            });
+    });
+};
