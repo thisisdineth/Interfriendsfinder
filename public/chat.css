@@ -9,7 +9,7 @@ body {
 }
 
 #header {
-    background-color: #e3e8f6;
+    background: rgba(255, 255, 255, 0.3);
     padding: 20px;
     display: flex;
     justify-content: space-between;
@@ -117,7 +117,8 @@ body {
     flex-direction: column;
     justify-content: flex-end;
     align-items: stretch;
-    background-color: #e2dddd;
+    background: rgba(186, 232, 237, 0.3);
+    backdrop-filter: blur(10px);
     margin: 10px;
     padding: 10px;
     border-radius: 10px;
@@ -154,15 +155,17 @@ body {
 }
 
 .message.you {
-    background-color: #565859;
-    color: white;
+    background: rgba(7, 122, 160, 0.3);
+    backdrop-filter: blur(10px);
+    color: rgb(0, 0, 0);
     align-self: flex-end;
     border-top-right-radius: 0;
 }
 
 .message.stranger {
-    background-color: #001126;
-    color: white;
+    background: rgba(180, 225, 240, 0.3);
+    backdrop-filter: blur(10px);
+    color: rgb(0, 0, 0);
     align-self: flex-start;
     border-top-left-radius: 0;
 }
