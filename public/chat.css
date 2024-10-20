@@ -23,8 +23,9 @@ body {
     color: rgb(255, 255, 255);
 }
 #local-time {
-    color: white;
-    background-color: #0288d1;
+    color: rgb(69, 67, 67);
+    background: rgba(5, 78, 160, 0.3);
+    backdrop-filter: blur(10px);
     padding: 15px 30px; 
     font-size: 24px; 
     background-size: 40px; 
@@ -221,6 +222,7 @@ body {
 #chat-input-container {
     display: flex;
     width: 100%;
+    max-width: 100%;
     margin-top: 10px;
     bottom: 0;
     left: 0;
@@ -240,6 +242,8 @@ body {
 
 #send-btn {
     padding: 10px;
+    width: 25%;
+    max-width: 10%;
     border: none;
     background-color: #03729b;
     color: white;
@@ -261,14 +265,15 @@ body {
     padding: 10px 20px;
     margin: 0 5px;
     border: none;
-    background-color: #02126f;
-    color: white;
+    background-color: rgba(4, 55, 131, 0.2);
+    backdrop-filter: blur(10px);
+    color: #000000;
     border-radius: 20px;
     cursor: pointer;
 }
 
 #new-chat-btn:hover {
-    background-color: #3054f5;
+    background-color: rgba(7, 35, 74, 0.2);
 }
 
 #skip-btn {
