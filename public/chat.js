@@ -31,6 +31,13 @@ signInAnonymously(auth).catch((error) => {
     console.error("Error signing in anonymously:", error);
 });
 
+// Show loading screen for 1 seconds
+window.addEventListener('load', function() {
+    setTimeout(function() {
+        document.body.classList.add('loaded');
+    }, 1000); // 5 seconds delay
+});
+
 // Handle authentication state
 onAuthStateChanged(auth, (user) => {
     if (user) {
