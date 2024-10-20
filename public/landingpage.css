@@ -113,6 +113,34 @@ header ul li a:hover {
     animation: slideIn 1.2s ease-in-out;
 }
 
+/* Scroll-Up Section Styling red*/ 
+.scroll-section {
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 50px;
+    background: linear-gradient(120deg, #6a85b6, #bac8e0);
+    border: none;
+}
+
+.content-container {
+    opacity: 0;
+    transform: translateY(100px);
+    transition: opacity 0.8s ease, transform 0.8s ease;
+    text-align: center;
+}
+
+.reveal {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.reveal-image {
+    width: 300px;
+    margin-bottom: 20px;
+}
+
 /* Loading Screen Styles */
 #loading-screen {
     position: fixed;
@@ -143,6 +171,73 @@ header ul li a:hover {
 .loading-logo {
     width: 100px;
     animation: spin 2s linear infinite;
+}
+
+/* Scroll-Up Images Section */
+.scroll-images {
+    display: flex;
+    justify-content: space-around;
+    margin: 0px 0;
+    background: linear-gradient(120deg, #9ab2dd, #bac8e0);
+}
+
+.image-container {
+    width: 30%;
+    overflow: hidden;
+}
+
+.scroll-up-image {
+    width: 100%;
+    transform: translateY(100px);
+    opacity: 0;
+    transition: transform 0.8s ease, opacity 0.8s ease;
+}
+
+.scroll-up-image.show {
+    transform: translateY(0);
+    opacity: 1;
+}
+
+/* Footer Section */
+footer {
+    background-color: #6a85b6;
+    color: white;
+    padding: 40px 20px;
+    text-align: center;
+}
+
+footer h3 {
+    font-size: 24px;
+    margin-bottom: 10px;
+}
+
+footer p {
+    font-size: 16px;
+    margin-bottom: 20px;
+}
+
+footer ul.socials {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+}
+
+footer ul.socials li a {
+    color: white;
+    font-size: 24px;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+footer ul.socials li a:hover {
+    color: #bac8e0;
+}
+
+.footer-bottom {
+    margin-top: 20px;
+    font-size: 14px;
 }
 
 @keyframes spin {
@@ -183,7 +278,19 @@ body.loaded #loading-screen {
         height: 450px;
         margin-top: 30px;
     }
+    
+    .scroll-images {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .image-container {
+        width: 80%;
+        margin-bottom: 20px;
+    }
 }
+
+
 
 /* Animations */
 @keyframes fadeInUp {
