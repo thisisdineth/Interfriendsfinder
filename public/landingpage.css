@@ -5,6 +5,7 @@
     box-sizing: border-box;
 }
 
+
 body {
     font-family: 'Arial', sans-serif;
     background-color: #f4f4f4;
@@ -99,7 +100,7 @@ nav ul li .btn-primary {
 /* Features Section */
 .features-section {
     padding: 100px 50px;
-    background-color: #f4f4f4;
+    background: linear-gradient(120deg,#00BFFF, #3f92ea );
     text-align: center;
 }
 
@@ -155,7 +156,7 @@ nav ul li .btn-primary {
 
 /* Footer */
 footer {
-    background-color: #333;
+    background-color: #041f45;
     color: white;
     text-align: center;
     padding: 40px 0;
