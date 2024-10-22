@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="apple-touch-icon" sizes="180x180" href="favicon/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="favicon/favicon-16x16.png">
+    <link rel="manifest" href="favicon/site.webmanifest">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <meta name="msapplication-TileColor" content="#da532c">
+    <meta name="theme-color" content="#ffffff">
+    <meta name="keywords"
+        content="InterPal , Inter Friends finder , friend finder, friends app, chat app, education app, maths solver , friends groups">
+    <meta name="google-adsense-account" content="ca-pub-6219933128084510">
+    <meta name="description" content="This is a connectivity app specially designed for students and teenagers.">
+    <meta property="og:title" content="Inter Friend Finder">
+    <meta property="og:description"
+        content="This is a connectivity app called Inter Friend Finder. You can simply find a person to chat, cure your boredom, and learn languages.">
+    <meta property="og:image" content="favicon/apple-touch-icon.png">
+    <meta property="og:url" content="https://findaguest.online">
+    <meta property="og:type" content="website">
+    <title>Inter Friend Finder</title>
+    <style>
+        
+        html,
+        body {
+            max-width: 100%;
+            overflow-x: hidden;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        *,
+        *::before,
+        *::after {
+            box-sizing: inherit;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background: linear-gradient(to right, #e1fcff, #f6fefe);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            min-height: 100vh;
+            text-align: center;
+            color: #333;
+        }
+
+        #header,
+        #content,
+        #footer {
+            width: 100%;
+            overflow-x: hidden;
+        }
+
+        #header {
+            width: 100%;
+            padding: 20px;
+            background-color: #e2ebfc;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            color: black;
+            transition: all 0.3s ease;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            /* Ensure header stays on top */
+        }
+
+        #logo {
+            height: 60px;
+        }
+
+        #site-title {
+            font-size: 32px;
+            font-weight: 700;
+            margin-left: 15px;
+            color: #f41f7b;
+            transition: color 0.3s ease;
+        }
+
+        #site-title:hover {
+            color: #d93208;
+        }
+
+        #header-content {
+            display: flex;
+            align-items: center;
+        }
+
+        #menu {
+            display: none;
+            gap: 20px;
+        }
+
+        #translate-btn {
+            padding: 10px 20px;
+            font-size: 16px;
+            color: black;
+            background-color: #fb7361;
+            border: none;
+            border-radius: 5px;
+            text-align: right;
+            cursor: pointer;
+            text-transform: uppercase;
+            transition: all 0.3s ease;
+        }
+
+        #translate-btn:hover {
+            background-color: #fa2bd4;
+        }
+
+        #start-chat-section {
+            margin: 30px;
+            padding: 30px;
+            background-color: #8dbde4;
+            border-radius: 15px;
+            box-shadow: 0 6px 20px rgba(3, 130, 43, 0.1);
+            transition: box-shadow 0.3s ease;
+        }
+
+        #hero {
+            width: 1500px;
+            max-width: 1500px;
+            height: 720px;
+
+        }
+
+        #start-chat-section:hover {
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+        }
+
+        #start-chat-btn {
+            display: inline-block;
+            padding: 15px 40px;
+            font-size: 18px;
+            font-weight: bold;
+            color: #1c1f24;
+            background-color: #61fbb6;
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+            text-transform: uppercase;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 10px rgba(9, 188, 54, 0.5);
+            margin-right: 10px;
+        }
+
+        #start-chat-btn:hover {
+            background-color: #5aff23;
+            box-shadow: 0 6px 15px rgba(69, 252, 33, 0.6);
+            transform: translateY(-2px);
+        }
+
+        .content-section {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            padding: 20px;
+            
+        }
+
+        .content-image {
+            max-width: 50%;
+            height: auto;
+        }
+
+        .content-text {
+            flex: 1;
+            text-align: left;
+            
+        }
+
+       
+        .dock {
+            position: fixed;
+            bottom: 0px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(10px);
+            padding: 10px 20px;
+            border-radius: 20px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        
+        .dock-icon {
+            text-align: center;
+            margin: 0 15px;
+            color: #333;
+            font-size: 24px;
+            transition: transform 0.3s ease;
+        }
+
+        .dock-icon:hover {
+            transform: scale(1.3);
+        }
+
+        .dock-icon i {
+            display: block;
+        }
+
+        footer {
+            background-color: #4f87f8;
+            color: #ffffff;
+            padding: 20px;
+            width: 100%;
+            text-align: center;
+            font-size: 14px;
+            margin-top: auto;
+            display: none;
+        }
+
+        @media only screen and (max-width: 600px) {
+            #header {
+                flex-direction: column;
+                padding: 15px;
+            }
+.content-text{
+    display: none;
+}
+            .content-section {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .content-image {
+                max-width: 50px;
+                max-height: 50px;
+                display: none;
+            }
+
+            #logo {
+                height: 50px;
+            }
+
+            #hero {
+                max-width: 470px;
+                max-height: 300px;
+            }
+
+            #site-title {
+                font-size: 28px;
+                margin-left: 0;
+                margin-top: 10px;
+            }
+
+            #translate-btn {
+                padding: 8px 15px;
+                font-size: 14px;
+                margin-top: 8px;
+                color: black;
+            }
+
+            #start-chat-section {
+                margin: 15px;
+                padding: 20px;
+            }
+
+            #start-chat-btn {
+                padding: 12px 30px;
+                font-size: 16px;
+                margin-right: 5px;
+                margin-top: 15px;
+            }
+
+            footer {
+                font-size: 12px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <header id="header">
+        <div id="header-content">
+            <img id="logo" src="img/logo.png" alt="Stranger Chat Logo">
+            <div id="site-title">Inter Friend Finder</div>
+        </div>
+        <nav id="menu">
+            <button id="translate-btn"
+                onclick="window.location.href='https://strangerchat.online/about/'">About</button>
+            <button id="translate-btn" onclick="window.location.href='https://blog.strangerchat.online'">Blog</button>
+        </nav>
+    </header>
+
+    <div id="heroimg">
+        <img id="hero" src="img/hero.png" alt="hero img">
+    </div>
+
+    <div id="start-chat-section">
+        <button id="start-chat-btn" onclick="window.location.href='chats.html'">Inter Chat 👫</button>
+        <button id="start-chat-btn" onclick="window.location.href='voice.html'">Inter Voice 🎙️</button>
+        <button id="start-chat-btn" onclick="window.location.href='video.html'">Inter Video 📸</button>
+        <button id="start-chat-btn" onclick="window.location.href='edu/index.html'">Inter EDU Wall 📚</button>
+    </div>
+
+    <div class="content-section">
+        <img src="img/find.png" alt="Image Description" class="content-image">
+        <div class="content-text">
+            <p style="margin-bottom: 15px;">Visit Inter Friend Finder EDU for get educatinal helps of find an Inteligent
+                frind to talk about educational things<br>
+                <a href="edu/"><button
+                        style="color: #ffffff;background-color: #4f87f8; border-radius: 20px; width: 500px;height: 120px;font-size: 45px;">Visit
+                        Inter EDU</button></a>
+            </p>
+
+        </div>
+    </div>
+    
+   <!--Menu-->
+    <div class="dock">
+        <a href="index.html" class="dock-icon">
+            <i class="fas fa-home"></i>
+        </a>
+        <a href="chats.html" class="dock-icon">
+            <i class="fa fa-comments" aria-hidden="true"></i>
+        </a>
+        <a href="voice.html" class="dock-icon">
+            <i class="fa fa-microphone" aria-hidden="true"></i>
+        </a>
+        <a href="video.html" class="dock-icon">
+            <i class="fa fa-video-camera" aria-hidden="true"></i>
+        </a>
+        <a href="./edu/" class="dock-icon">
+            <i class="fa fa-book" aria-hidden="true"></i>
+        </a>
+        <a href="./edu/exp.html" class="dock-icon">
+            <i class="fa fa-envelope" aria-hidden="true"></i>
+        </a>
+        <a href="./edu/profile.html" class="dock-icon">
+            <i class="fa fa-user" aria-hidden="true"></i>
+        </a>
+    </div>
+
+   
+</body>
+
+</html>
