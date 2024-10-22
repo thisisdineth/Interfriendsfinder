@@ -164,7 +164,38 @@ nav ul li .btn-primary {
     font-size: 18px;
     color: #555;
 }
+.hire-section {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    background-color: #041f45;
+    color: white;
+    text-decoration: none;
+}
 
+.hire-text {
+    flex: 1;
+    padding-right: 20px;
+    padding: 2px;
+    text-decoration: none;
+    color: white;
+
+
+}
+.custom-link {
+    text-decoration: none;
+    color: white;
+}
+.hire-image {
+    flex: 1;
+    text-align: right;
+}
+
+.hire-image img {
+    max-width: 100%;
+    height: auto;
+}
 /* Footer */
 footer {
     background-color: #041f45;
@@ -378,5 +409,16 @@ footer ul li a {
         width: 100px;
         animation: bounce 2s infinite;
         width: 10vh;
+    }
+}
+
+@media (max-width: 768px) {
+    .hire-section {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .hire-text, .hire-image {
+        padding: 10px 0;
     }
 }
