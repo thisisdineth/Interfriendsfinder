@@ -100,7 +100,7 @@ nav ul li .btn-primary {
 /* Features Section */
 .features-section {
     padding: 100px 50px;
-    background: linear-gradient(120deg,#00BFFF, #3f92ea );
+    background: linear-gradient(120deg, #00BFFF, #3f92ea);
     text-align: center;
 }
 
@@ -113,6 +113,17 @@ nav ul li .btn-primary {
     display: flex;
     justify-content: space-around;
     gap: 30px;
+    flex-wrap: wrap; /* Ensures features wrap on smaller screens */
+}
+
+/* Ensure feature box links cover the entire box */
+.feature-box-link {
+    text-decoration: none; /* Remove underline from links */
+    color: inherit; /* Inherit text color from parent */
+    display: block; /* Make the entire box clickable */
+    width: 100%; /* Ensure full width for the box */
+    max-width: 300px; /* Limit the size of feature boxes */
+    transition: transform 0.3s ease;
 }
 
 .feature-box {
@@ -124,8 +135,9 @@ nav ul li .btn-primary {
     transition: transform 0.3s ease;
 }
 
-.feature-box:hover {
-    transform: translateY(-10px);
+.feature-box-link:hover .feature-box {
+    transform: translateY(-10px); /* Lift on hover */
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2); /* Enhance shadow on hover */
 }
 
 .feature-box h3 {
@@ -136,7 +148,6 @@ nav ul li .btn-primary {
 .feature-box p {
     color: #555;
 }
-
 /* About Section */
 .about-section {
     padding: 100px 50px;
@@ -202,6 +213,53 @@ footer ul li a {
     width: 100px;
     animation: bounce 2s infinite;
 }
+/* Mobile Navigation Styles */
+.hamburger {
+    display: none;
+    font-size: 28px;
+    cursor: pointer;
+    color: #333;
+}
+
+@media (max-width: 768px) {
+    /* Hide the original nav menu and show hamburger icon */
+    nav ul {
+        display: none;
+        flex-direction: column;
+        position: absolute;
+        top: 70px;
+        left: 0;
+        width: 100%;
+        background-color: #ffffff;
+        text-align: center;
+        padding: 0;
+        margin: 0;
+    }
+
+    nav ul.active {
+        display: flex;
+    }
+
+    nav ul li {
+        width: 100%;
+        padding: 15px 0;
+        border-bottom: 1px solid #f4f4f4;
+    }
+
+    .hamburger {
+        display: block;
+    }
+
+    /* Adjust padding for mobile header */
+    header {
+        padding: 20px;
+    }
+
+    /* Hide logo slightly smaller screens */
+    .hero {
+        padding: 100px 20px;
+    }
+}
 
 /* Animations */
 @keyframes bounce {
@@ -213,5 +271,105 @@ footer ul li a {
     }
     60% {
         transform: translateY(-15px);
+    }
+}
+
+/* Mobile View for Other Sections */
+
+/* Hero Section */
+@media (max-width: 768px) {
+    .hero {
+        flex-direction: column; /* Stack the content vertically */
+        padding: 80px 20px; /* Reduce padding for mobile */
+        text-align: center; /* Center text on mobile */
+    }
+
+    .hero-content {
+        max-width: 100%; /* Allow full width for the content */
+        padding: 0;
+    }
+
+    .hero-content h1 {
+        margin-top: 15px;
+        font-size: 28px; /* Reduce font size */
+    }
+
+    .hero-content p {
+        font-size: 16px; /* Adjust text size for readability */
+    }
+
+    .hero-content .btn-primary {
+        padding: 10px 20px; /* Smaller buttons on mobile */
+    }
+
+    /* Hide hero image on small devices */
+    .hero-image {
+       display: none; 
+        
+    }
+}
+
+/* Features Section */
+@media (max-width: 768px) {
+    .features-section {
+        padding: 50px 20px; /* Reduce padding for mobile */
+    }
+
+    .features-section h2 {
+        font-size: 24px; /* Reduce heading size */
+    }
+
+    .features-container {
+        flex-direction: column; /* Stack features vertically */
+        align-items: center; /* Center-align features */
+        gap: 20px; /* Space between feature boxes */
+    }
+
+    .feature-box {
+        width: 100%; /* Full width for feature boxes */
+        padding: 30px 20px; /* Adjust padding for smaller screen */
+        box-shadow: none; /* Reduce shadow for cleaner mobile UI */
+    }
+
+    .feature-box h3 {
+        font-size: 20px; /* Adjust heading size */
+    }
+
+    .feature-box p {
+        font-size: 16px; /* Adjust text size */
+    }
+}
+
+/* About Section */
+@media (max-width: 768px) {
+    .about-section {
+        padding: 50px 20px; /* Reduce padding for mobile */
+    }
+
+    .about-content {
+        max-width: 100%; /* Full width content */
+        text-align: center; /* Center-align text */
+    }
+
+    .about-content h2 {
+        font-size: 24px; /* Reduce heading size */
+    }
+
+    .about-content p {
+        font-size: 16px; /* Adjust text size */
+    }
+}
+
+/* Footer Section */
+
+
+/* Loading Screen */
+@media (max-width: 768px) {
+    #loading-screen {
+        padding: 20px; /* Adjust padding for smaller screens */
+    }
+
+    .loading-logo {
+        width: 80px; /* Smaller logo for mobile */
     }
 }
