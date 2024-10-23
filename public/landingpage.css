@@ -66,6 +66,7 @@ nav ul li .btn-primary {
     padding: 150px 50px;
     background: linear-gradient(120deg, #007BFF, #00BFFF);
     color: white;
+    overflow-x: hidden;
 }
 
 .hero-content {
@@ -80,6 +81,7 @@ nav ul li .btn-primary {
 .hero-content p {
     font-size: 34px;
     margin-bottom: 30px;
+    margin-right: 12px;
 }
 
 .hero-content .btn-primary {
@@ -172,6 +174,7 @@ nav ul li .btn-primary {
     background-color: #041f45;
     color: white;
     text-decoration: none;
+    border: none;
 }
 
 .hire-text {
@@ -336,6 +339,9 @@ footer ul li a {
     /* Hide hero image on small devices */
     .hero-image {
        display: flex; 
+       justify-content: center;
+       width: 100%;
+       overflow-x: hidden;
         
     }
 }
