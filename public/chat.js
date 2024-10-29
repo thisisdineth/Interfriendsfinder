@@ -1,1 +1,325 @@
-function _0xc50c(){const _0x454391=['then','innerHTML','20vJqKME','<sup>','User\x20marked\x20as\x20inactive.','/messages/','findaguest-3024b','add','none','18BvPSBo','G-WPJK68Y0XZ','580209VFCDCx','chat-box','Message\x20deleted.','includes','forEach','uid','users','you','toLocaleTimeString','getElementById','reply','textContent','block','7pMZdgd','val','key','Enter','The\x20user\x20has\x20left\x20the\x20chat.','delete-btn','/currentChatRoom','value','preventDefault','You:\x20Type\x20a\x20message...','chatRooms','style','Cannot\x20connect\x20to\x20a\x20chat\x20room\x20with\x20yourself.','message','activeUsers','chatRooms/','replyTo','scrollHeight','display','No\x20active\x20users\x20available.','Reply','active-user-count','new-chat-btn','log','1193175roESbR','message-text','error','AIzaSyBTonYWFHgcxcVi1BBVeZkx823CfuT7CgM','Replying\x20to:\x20','Connected\x20to\x20chat\x20room\x20with\x20ID:\x20','.delete-btn,\x20.reply-btn','chat-input','placeholder','catch','4859096rxrmyM','keys','https://findaguest-3024b-default-rtdb.asia-southeast1.firebasedatabase.app','replace','Message\x20sent.','Error\x20deleting\x20message:','skip-btn','users/','send-btn','loaded','234427wLpgXf','querySelectorAll','At\x20least\x20two\x20users\x20need\x20to\x20be\x20online\x20to\x20start\x20a\x20chat.\x20Please\x20wait...','478915pukrDV','exists','length','load','trim','chat-container','33591272GjFPkT','/messages','div','9047056iZUgJw','appendChild','createElement','button','292838904473','Error\x20sending\x20message:','typing-indicator','hidden','addEventListener','classList','scrollTop','floor','mouseleave','remove','/typing','local-time','</sup>','10wphmtw','activeUsers/','click'];_0xc50c=function(){return _0x454391;};return _0xc50c();}const _0x4807e1=_0x3ff4;(function(_0x3c8247,_0x2eb622){const _0x85eb99=_0x3ff4,_0x367046=_0x3c8247();while(!![]){try{const _0x59e4f4=parseInt(_0x85eb99(0x12a))/0x1*(parseInt(_0x85eb99(0xe3))/0x2)+parseInt(_0x85eb99(0xf1))/0x3+parseInt(_0x85eb99(0x120))/0x4+-parseInt(_0x85eb99(0x12d))/0x5*(parseInt(_0x85eb99(0xef))/0x6)+parseInt(_0x85eb99(0xfe))/0x7*(parseInt(_0x85eb99(0xd2))/0x8)+-parseInt(_0x85eb99(0x116))/0x9*(-parseInt(_0x85eb99(0xe8))/0xa)+-parseInt(_0x85eb99(0xcf))/0xb;if(_0x59e4f4===_0x2eb622)break;else _0x367046['push'](_0x367046['shift']());}catch(_0x3ed013){_0x367046['push'](_0x367046['shift']());}}}(_0xc50c,0x9b16b));import{initializeApp}from'https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js';import{getAuth,signInAnonymously,onAuthStateChanged}from'https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js';import{getDatabase,ref,set,get,push,onValue,remove,serverTimestamp,onDisconnect}from'https://www.gstatic.com/firebasejs/10.12.5/firebase-database.js';import{filterBadWords}from'./badword.js';const firebaseConfig={'apiKey':_0x4807e1(0x119),'authDomain':'findaguest-3024b.firebaseapp.com','databaseURL':_0x4807e1(0x122),'projectId':_0x4807e1(0xec),'storageBucket':'findaguest-3024b.appspot.com','messagingSenderId':_0x4807e1(0xd6),'appId':'1:292838904473:web:65cc9227374cb898581e08','measurementId':_0x4807e1(0xf0)},app=initializeApp(firebaseConfig),auth=getAuth(app),db=getDatabase(app);let currentUser=null,currentChatRoom=null,typingRef=null,replyMessageId=null,inactivityTimeout=null,chatLeaveTimeout=null;signInAnonymously(auth)['catch'](_0x2d1f78=>{const _0x3c15d1=_0x4807e1;console[_0x3c15d1(0x118)]('Error\x20signing\x20in\x20anonymously:',_0x2d1f78);}),window[_0x4807e1(0xda)](_0x4807e1(0x130),function(){setTimeout(function(){const _0x1a25f7=_0x3ff4;document['body'][_0x1a25f7(0xdb)][_0x1a25f7(0xed)](_0x1a25f7(0x129));},0x3e8);}),onAuthStateChanged(auth,_0x1e6327=>{const _0x1e6ccf=_0x4807e1;if(_0x1e6327){currentUser=_0x1e6327,setActiveUser(),updateActiveUsersCount();const _0x52f614=ref(db,_0x1e6ccf(0x127)+currentUser['uid']+_0x1e6ccf(0x104));onValue(_0x52f614,_0x1a3a01=>{const _0x7dee17=_0x1e6ccf;_0x1a3a01[_0x7dee17(0x12e)]()&&(currentChatRoom=_0x1a3a01[_0x7dee17(0xff)](),redirectToChatRoom(),listenForMessages(),listenForTyping(),resetInactivityTimer());});}});function _0x3ff4(_0x1cf0cb,_0x90f30f){const _0xc50c5f=_0xc50c();return _0x3ff4=function(_0x3ff4c8,_0xc6536d){_0x3ff4c8=_0x3ff4c8-0xcf;let _0x1b3e9f=_0xc50c5f[_0x3ff4c8];return _0x1b3e9f;},_0x3ff4(_0x1cf0cb,_0x90f30f);}function updateActiveUsersCount(){const _0x55672e=_0x4807e1,_0x459cb=ref(db,_0x55672e(0x10c));onValue(_0x459cb,_0x8e81e=>{const _0xedb91d=_0x55672e,_0x3a09bc=_0x8e81e[_0xedb91d(0x12e)]()?Object[_0xedb91d(0x121)](_0x8e81e[_0xedb91d(0xff)]())['length']:0x0;document[_0xedb91d(0xfa)](_0xedb91d(0x113))[_0xedb91d(0xfc)]=_0x3a09bc;});}function setActiveUser(){const _0x1dccc3=_0x4807e1,_0x20d702=ref(db,_0x1dccc3(0xe4)+currentUser[_0x1dccc3(0xf6)]);set(_0x20d702,{'uid':currentUser[_0x1dccc3(0xf6)],'timestamp':serverTimestamp()}),onDisconnect(_0x20d702)[_0x1dccc3(0xdf)]()['then'](()=>{console['log']('User\x20disconnected.'),updateActiveUsersCount();}),document[_0x1dccc3(0xda)]('visibilitychange',handleVisibilityChange);}function handleVisibilityChange(){const _0x8790a2=_0x4807e1;document[_0x8790a2(0xd9)]?markUserInactive():markUserActive();}function markUserInactive(){const _0x223a5f=_0x4807e1,_0x180dbd=ref(db,'activeUsers/'+currentUser[_0x223a5f(0xf6)]);remove(_0x180dbd)[_0x223a5f(0xe6)](()=>{const _0xe35c46=_0x223a5f;console[_0xe35c46(0x115)](_0xe35c46(0xea)),clearTimeout(inactivityTimeout),clearTimeout(chatLeaveTimeout);});}function markUserActive(){setActiveUser(),resetInactivityTimer();}function resetInactivityTimer(){clearTimeout(chatLeaveTimeout),chatLeaveTimeout=setTimeout(leaveChatRoom,0x1d4c0);}async function startChat(){const _0x447904=_0x4807e1;try{const _0xca9d2c=ref(db,_0x447904(0x10c)),_0xe4439c=await get(_0xca9d2c);if(_0xe4439c[_0x447904(0x12e)]()){const _0x2ce03e=_0xe4439c[_0x447904(0xff)](),_0x5c8d7d=Object[_0x447904(0x121)](_0x2ce03e)['filter'](_0xe9f34b=>_0xe9f34b!==currentUser[_0x447904(0xf6)]);if(_0x5c8d7d['length']>0x0){const _0x2f1367=_0x5c8d7d[Math[_0x447904(0xdd)](Math['random']()*_0x5c8d7d[_0x447904(0x12f)])];await connectToChatRoom(_0x2f1367);}else alert(_0x447904(0x12c));}else alert(_0x447904(0x111));}catch(_0x5a6224){console[_0x447904(0x118)]('Error\x20starting\x20chat:',_0x5a6224);}}async function connectToChatRoom(_0x327113){const _0x1dd376=_0x4807e1;if(_0x327113===currentUser['uid']){console[_0x1dd376(0x118)](_0x1dd376(0x10a));return;}const _0x1f3ec1=ref(db,_0x1dd376(0x108)),_0x36eb2=ref(db,_0x1dd376(0x127)+currentUser[_0x1dd376(0xf6)]+'/currentChatRoom'),_0x43f8fc=ref(db,_0x1dd376(0x127)+_0x327113+_0x1dd376(0x104));let _0x29d0f5=null;const _0x1d1e52=await get(_0x1f3ec1);_0x1d1e52[_0x1dd376(0x12e)]()&&_0x1d1e52[_0x1dd376(0xf5)](_0x3e25bd=>{const _0x3845e8=_0x1dd376,_0x2ae5ef=_0x3e25bd[_0x3845e8(0xff)]();_0x2ae5ef[_0x3845e8(0xf7)]&&_0x2ae5ef[_0x3845e8(0xf7)][_0x3845e8(0xf4)](currentUser['uid'])&&_0x2ae5ef[_0x3845e8(0xf7)][_0x3845e8(0xf4)](_0x327113)&&(_0x29d0f5=_0x3e25bd[_0x3845e8(0x100)]);});if(_0x29d0f5)currentChatRoom=_0x29d0f5,await set(_0x36eb2,currentChatRoom),await set(_0x43f8fc,currentChatRoom);else{const _0x490150=push(_0x1f3ec1);currentChatRoom=_0x490150['key'],await set(_0x490150,{'users':[currentUser[_0x1dd376(0xf6)],_0x327113],'messages':[]}),await set(_0x36eb2,currentChatRoom),await set(_0x43f8fc,currentChatRoom);}console[_0x1dd376(0x115)](_0x1dd376(0x11b)+currentChatRoom),redirectToChatRoom(),listenForMessages(),listenForTyping(),resetInactivityTimer();}function redirectToChatRoom(){const _0x513b87=_0x4807e1;alert('Successfully\x20connected\x20to\x20a\x20user!\x20You\x20can\x20now\x20start\x20chatting.'),document[_0x513b87(0xfa)]('chat-container')[_0x513b87(0x109)]['display']=_0x513b87(0xfd);}function listenForMessages(){const _0x4a97a2=_0x4807e1;if(!currentChatRoom)return;const _0x45b194=ref(db,_0x4a97a2(0x10d)+currentChatRoom+_0x4a97a2(0xd0));onValue(_0x45b194,_0x549375=>{const _0x4d321d=_0x4a97a2,_0x467ce4=document[_0x4d321d(0xfa)](_0x4d321d(0xf2));_0x467ce4['innerHTML']='',_0x549375[_0x4d321d(0xf5)](_0x57c1c4=>{const _0x1120ac=_0x4d321d,_0x4de55a=_0x57c1c4[_0x1120ac(0xff)](),_0xf5358c=document[_0x1120ac(0xd4)](_0x1120ac(0xd1));_0xf5358c[_0x1120ac(0xdb)][_0x1120ac(0xed)](_0x1120ac(0x10b));_0x4de55a['uid']===currentUser[_0x1120ac(0xf6)]?_0xf5358c[_0x1120ac(0xdb)][_0x1120ac(0xed)](_0x1120ac(0xf8)):_0xf5358c[_0x1120ac(0xdb)]['add']('stranger');const _0x198a12=document[_0x1120ac(0xd4)](_0x1120ac(0xd1));_0x198a12[_0x1120ac(0xdb)][_0x1120ac(0xed)](_0x1120ac(0x117)),_0x198a12['innerHTML']=filterBadWords(formatMathExpression(_0x4de55a[_0x1120ac(0x10b)])),_0xf5358c['appendChild'](_0x198a12);if(_0x4de55a[_0x1120ac(0x10e)]){const _0x2f4d21=document[_0x1120ac(0xd4)](_0x1120ac(0xd1));_0x2f4d21[_0x1120ac(0xdb)][_0x1120ac(0xed)](_0x1120ac(0xfb)),_0x2f4d21[_0x1120ac(0xe7)]=_0x1120ac(0x11a)+filterBadWords(formatMathExpression(_0x4de55a[_0x1120ac(0x10e)][_0x1120ac(0x10b)])),_0xf5358c[_0x1120ac(0xd3)](_0x2f4d21);}if(_0x4de55a[_0x1120ac(0xf6)]===currentUser[_0x1120ac(0xf6)]){const _0x36fff3=document[_0x1120ac(0xd4)](_0x1120ac(0xd5));_0x36fff3[_0x1120ac(0xdb)]['add'](_0x1120ac(0x103),'hidden'),_0x36fff3[_0x1120ac(0xfc)]='Delete',_0x36fff3[_0x1120ac(0xda)](_0x1120ac(0xe5),()=>deleteMessage(_0x57c1c4[_0x1120ac(0x100)])),_0xf5358c['appendChild'](_0x36fff3);}const _0x5a4292=document[_0x1120ac(0xd4)](_0x1120ac(0xd5));_0x5a4292[_0x1120ac(0xdb)][_0x1120ac(0xed)]('reply-btn',_0x1120ac(0xd9)),_0x5a4292['textContent']=_0x1120ac(0x112),_0x5a4292['addEventListener'](_0x1120ac(0xe5),()=>setReplyTo(filterBadWords(formatMathExpression(_0x4de55a['message'])))),_0xf5358c[_0x1120ac(0xd3)](_0x5a4292),_0xf5358c[_0x1120ac(0xda)]('mouseenter',()=>{showButtons(_0xf5358c);}),_0xf5358c['addEventListener'](_0x1120ac(0xde),()=>{hideButtons(_0xf5358c);}),_0xf5358c[_0x1120ac(0xda)](_0x1120ac(0xe5),()=>{toggleButtons(_0xf5358c);}),_0x467ce4[_0x1120ac(0xd3)](_0xf5358c);}),_0x467ce4[_0x4d321d(0xdc)]=_0x467ce4[_0x4d321d(0x10f)];});}function showButtons(_0x18f5c4){const _0x2a055a=_0x4807e1,_0x40ce60=_0x18f5c4[_0x2a055a(0x12b)](_0x2a055a(0x11c));_0x40ce60[_0x2a055a(0xf5)](_0x5bbb7d=>_0x5bbb7d[_0x2a055a(0xdb)][_0x2a055a(0xdf)](_0x2a055a(0xd9)));}function hideButtons(_0x5abfa2){const _0x3a2fe1=_0x4807e1,_0x416f6a=_0x5abfa2[_0x3a2fe1(0x12b)](_0x3a2fe1(0x11c));_0x416f6a['forEach'](_0x52e9d9=>_0x52e9d9[_0x3a2fe1(0xdb)][_0x3a2fe1(0xed)](_0x3a2fe1(0xd9)));}function toggleButtons(_0x377cae){const _0x2f807f=_0x4807e1,_0x4559ea=_0x377cae[_0x2f807f(0x12b)]('.delete-btn,\x20.reply-btn');_0x4559ea[_0x2f807f(0xf5)](_0x5bd06a=>_0x5bd06a[_0x2f807f(0xdb)]['toggle']('hidden'));}function setReplyTo(_0x50d672){const _0x5572d0=_0x4807e1;replyMessageId=_0x50d672;const _0x11caaa=document['getElementById'](_0x5572d0(0x11d));_0x11caaa[_0x5572d0(0x11e)]=_0x5572d0(0x11a)+_0x50d672;}function handleTyping(){const _0x1c5415=_0x4807e1;typingRef&&set(typingRef,{'uid':currentUser[_0x1c5415(0xf6)],'timestamp':serverTimestamp()}),resetInactivityTimer();}function listenForTyping(){const _0x6b82c6=_0x4807e1;if(!currentChatRoom)return;typingRef=ref(db,_0x6b82c6(0x10d)+currentChatRoom+_0x6b82c6(0xe0)),onValue(typingRef,_0x3b1fa4=>{const _0x3ca448=_0x6b82c6,_0x292991=_0x3b1fa4[_0x3ca448(0xff)](),_0x10ded8=document[_0x3ca448(0xfa)](_0x3ca448(0xd8));_0x292991&&_0x292991[_0x3ca448(0xf6)]!==currentUser[_0x3ca448(0xf6)]?_0x10ded8[_0x3ca448(0xfc)]='Stranger\x20is\x20typing...':_0x10ded8[_0x3ca448(0xfc)]='';});}function sendMessage(){const _0x34f573=_0x4807e1,_0x19534d=document[_0x34f573(0xfa)](_0x34f573(0x11d))[_0x34f573(0x105)];if(_0x19534d[_0x34f573(0x131)]()==='')return;try{const _0x2f1e7c=ref(db,_0x34f573(0x10d)+currentChatRoom+_0x34f573(0xd0)),_0x152b65=push(_0x2f1e7c);set(_0x152b65,{'uid':currentUser['uid'],'message':filterBadWords(formatMathExpression(_0x19534d)),'replyTo':replyMessageId?{'message':replyMessageId}:null,'timestamp':serverTimestamp()})[_0x34f573(0xe6)](()=>{const _0x4c948f=_0x34f573;console[_0x4c948f(0x115)](_0x4c948f(0x124)),document[_0x4c948f(0xfa)]('chat-input')[_0x4c948f(0x105)]='',document[_0x4c948f(0xfa)]('chat-input')[_0x4c948f(0x11e)]=_0x4c948f(0x107),replyMessageId=null,handleTyping();const _0x4f80da=document[_0x4c948f(0xfa)](_0x4c948f(0xf2));_0x4f80da[_0x4c948f(0xdc)]=_0x4f80da[_0x4c948f(0x10f)];})[_0x34f573(0x11f)](_0x31acdc=>{const _0x31e6c5=_0x34f573;console[_0x31e6c5(0x118)](_0x31e6c5(0xd7),_0x31acdc);});}catch(_0x1d68c0){console[_0x34f573(0x118)](_0x34f573(0xd7),_0x1d68c0);}}function deleteMessage(_0x47184b){const _0x43366d=_0x4807e1,_0xbee679=ref(db,_0x43366d(0x10d)+currentChatRoom+_0x43366d(0xeb)+_0x47184b);remove(_0xbee679)['then'](()=>{const _0x3bb503=_0x43366d;console['log'](_0x3bb503(0xf3));})[_0x43366d(0x11f)](_0x17f630=>{const _0x1bcf18=_0x43366d;console[_0x1bcf18(0x118)](_0x1bcf18(0x125),_0x17f630);});}async function leaveChatRoom(){const _0x1b466a=_0x4807e1;if(currentChatRoom){const _0x4ec9e3=ref(db,_0x1b466a(0x10d)+currentChatRoom),_0x3049ad=push(ref(db,_0x1b466a(0x10d)+currentChatRoom+_0x1b466a(0xd0)));await set(_0x3049ad,{'uid':currentUser[_0x1b466a(0xf6)],'message':_0x1b466a(0x102),'isSystemMessage':!![],'timestamp':serverTimestamp()}),setTimeout(async()=>{const _0x555477=_0x1b466a;await remove(_0x4ec9e3),currentChatRoom=null,document[_0x555477(0xfa)](_0x555477(0xf2))[_0x555477(0xe7)]='',document[_0x555477(0xfa)](_0x555477(0x132))[_0x555477(0x109)][_0x555477(0x110)]=_0x555477(0xee),alert('You\x20have\x20left\x20the\x20chat.');},0x1f4);}}function formatMathExpression(_0x130e09){const _0x2d8002=_0x4807e1;return _0x130e09=_0x130e09[_0x2d8002(0x123)](/\^(\d+)/g,(_0xe97bfc,_0x55e3a9)=>_0x2d8002(0xe9)+_0x55e3a9+_0x2d8002(0xe2)),_0x130e09=_0x130e09['replace'](/\*/g,'×'),_0x130e09=_0x130e09[_0x2d8002(0x123)](/\//g,'÷'),_0x130e09;}document['getElementById'](_0x4807e1(0x114))[_0x4807e1(0xda)](_0x4807e1(0xe5),startChat),document[_0x4807e1(0xfa)](_0x4807e1(0x128))[_0x4807e1(0xda)](_0x4807e1(0xe5),sendMessage),document[_0x4807e1(0xfa)](_0x4807e1(0x126))[_0x4807e1(0xda)](_0x4807e1(0xe5),leaveChatRoom),document[_0x4807e1(0xfa)](_0x4807e1(0x11d))[_0x4807e1(0xda)]('input',handleTyping),document[_0x4807e1(0xfa)](_0x4807e1(0x11d))[_0x4807e1(0xda)]('keydown',_0x1e841c=>{const _0x8d3945=_0x4807e1;_0x1e841c['key']===_0x8d3945(0x101)&&(_0x1e841c[_0x8d3945(0x106)](),sendMessage());}),setInterval(()=>{const _0x598a9d=_0x4807e1,_0x47a10c=new Date()[_0x598a9d(0xf9)]();document[_0x598a9d(0xfa)](_0x598a9d(0xe1))[_0x598a9d(0xfc)]=_0x47a10c;},0x3e8);
+// Firebase Imports
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
+import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
+import { getDatabase, ref, set, get, push, onValue, remove, serverTimestamp, onDisconnect } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-database.js";
+import { filterBadWords } from './badword.js';  // Import the bad words filtering function
+
+// Initialize Firebase
+const firebaseConfig = {
+    apiKey: "AIzaSyBTonYWFHgcxcVi1BBVeZkx823CfuT7CgM",
+    authDomain: "findaguest-3024b.firebaseapp.com",
+    databaseURL: "https://findaguest-3024b-default-rtdb.asia-southeast1.firebasedatabase.app",
+    projectId: "findaguest-3024b",
+    storageBucket: "findaguest-3024b.appspot.com",
+    messagingSenderId: "292838904473",
+    appId: "1:292838904473:web:65cc9227374cb898581e08",
+    measurementId: "G-WPJK68Y0XZ"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getDatabase(app);
+
+let currentUser = null;
+let currentChatRoom = null;
+let typingRef = null;
+let replyMessageId = null;
+let inactivityTimeout = null;
+let chatLeaveTimeout = null;
+
+// Anonymous Sign In
+signInAnonymously(auth).catch((error) => {
+    console.error("Error signing in anonymously:", error);
+});
+
+// Loading screen
+window.addEventListener('load', function() {
+    setTimeout(function() {
+        document.body.classList.add('loaded');
+    }, 1000); 
+});
+
+// Authentication state
+onAuthStateChanged(auth, (user) => {
+    if (user) {
+        currentUser = user;
+        updateUserStatus('available');
+        setActiveUser();
+        updateActiveUsersCount();
+
+        const userChatRoomRef = ref(db, `users/${currentUser.uid}/currentChatRoom`);
+        onValue(userChatRoomRef, (snapshot) => {
+            if (snapshot.exists()) {
+                currentChatRoom = snapshot.val();
+                redirectToChatRoom();
+                listenForMessages();
+                listenForTyping();
+                resetInactivityTimer();
+            }
+        });
+    }
+});
+
+// Track user status
+function updateUserStatus(status) {
+    const userRef = ref(db, `activeUsers/${currentUser.uid}`);
+    set(userRef, {
+        uid: currentUser.uid,
+        status: status,
+        timestamp: serverTimestamp()
+    });
+}
+
+// Active users count
+function updateActiveUsersCount() {
+    const activeUsersRef = ref(db, 'activeUsers');
+    onValue(activeUsersRef, (snapshot) => {
+        const activeUsers = snapshot.exists() ? Object.keys(snapshot.val()).length : 0;
+        document.getElementById('active-user-count').textContent = activeUsers;
+    });
+}
+
+// Set active user and manage disconnection
+function setActiveUser() {
+    const userRef = ref(db, `activeUsers/${currentUser.uid}`);
+    set(userRef, {
+        uid: currentUser.uid,
+        status: "available",
+        timestamp: serverTimestamp()
+    });
+
+    onDisconnect(userRef).remove().then(() => {
+        console.log("User disconnected.");
+        updateActiveUsersCount();
+    });
+
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+}
+
+// Handle inactivity
+function handleVisibilityChange() {
+    if (document.hidden) {
+        markUserInactive();
+    } else {
+        markUserActive();
+    }
+}
+
+function markUserInactive() {
+    updateUserStatus('available');
+    clearTimeout(inactivityTimeout);
+    clearTimeout(chatLeaveTimeout);
+}
+
+function markUserActive() {
+    updateUserStatus('available');
+    resetInactivityTimer();
+}
+
+function resetInactivityTimer() {
+    clearTimeout(chatLeaveTimeout);
+    chatLeaveTimeout = setTimeout(leaveChatRoom, 120000);
+}
+
+// Start chat with random user
+async function startChat() {
+    try {
+        const activeUsersRef = ref(db, 'activeUsers');
+        const snapshot = await get(activeUsersRef);
+
+        if (snapshot.exists()) {
+            const activeUsers = snapshot.val();
+            const availableUsers = Object.keys(activeUsers)
+                .filter(uid => uid !== currentUser.uid && activeUsers[uid].status === 'available');
+
+            if (availableUsers.length > 0) {
+                const randomUserId = availableUsers[Math.floor(Math.random() * availableUsers.length)];
+                await connectToChatRoom(randomUserId);
+            } else {
+                alert("No available users to start a chat. Please wait...");
+            }
+        } else {
+            alert("No active users available.");
+        }
+    } catch (error) {
+        console.error("Error starting chat:", error);
+    }
+}
+
+// Connect to chat room or create one
+async function connectToChatRoom(partnerUid) {
+    if (partnerUid === currentUser.uid) {
+        console.error("Cannot connect to a chat room with yourself.");
+        return;
+    }
+
+    const chatRoomsRef = ref(db, 'chatRooms');
+    const userChatRoomRef = ref(db, `users/${currentUser.uid}/currentChatRoom`);
+    const partnerChatRoomRef = ref(db, `users/${partnerUid}/currentChatRoom`);
+
+    let existingChatRoom = null;
+    const existingChatRoomsSnapshot = await get(chatRoomsRef);
+    if (existingChatRoomsSnapshot.exists()) {
+        existingChatRoomsSnapshot.forEach(roomSnapshot => {
+            const roomData = roomSnapshot.val();
+            if (roomData.users && roomData.users.includes(currentUser.uid) && roomData.users.includes(partnerUid)) {
+                existingChatRoom = roomSnapshot.key;
+            }
+        });
+    }
+
+    if (existingChatRoom) {
+        currentChatRoom = existingChatRoom;
+        await set(userChatRoomRef, currentChatRoom);
+        await set(partnerChatRoomRef, currentChatRoom);
+    } else {
+        const newChatRoomRef = push(chatRoomsRef);
+        currentChatRoom = newChatRoomRef.key;
+        await set(newChatRoomRef, {
+            users: [currentUser.uid, partnerUid],
+            messages: []
+        });
+        await set(userChatRoomRef, currentChatRoom);
+        await set(partnerChatRoomRef, currentChatRoom);
+    }
+
+    updateUserStatus('busy');
+    await set(ref(db, `activeUsers/${partnerUid}/status`), 'busy');
+    console.log(`Connected to chat room with ID: ${currentChatRoom}`);
+    redirectToChatRoom();
+    listenForMessages();
+    listenForTyping();
+    resetInactivityTimer();
+}
+
+// Chat room redirection
+function redirectToChatRoom() {
+    alert("Successfully connected to a user! You can now start chatting.");
+    document.getElementById('chat-container').style.display = 'block';
+}
+
+// Message listening
+function listenForMessages() {
+    if (!currentChatRoom) return;
+    const chatMessagesRef = ref(db, `chatRooms/${currentChatRoom}/messages`);
+    onValue(chatMessagesRef, (snapshot) => {
+        const chatBox = document.getElementById('chat-box');
+        chatBox.innerHTML = '';
+        snapshot.forEach(childSnapshot => {
+            const messageData = childSnapshot.val();
+            const messageElement = document.createElement('div');
+            messageElement.classList.add('message');
+            messageElement.classList.add(messageData.uid === currentUser.uid ? 'you' : 'stranger');
+
+            const messageText = document.createElement('div');
+            messageText.classList.add('message-text');
+            messageText.innerHTML = filterBadWords(formatMathExpression(messageData.message));
+            messageElement.appendChild(messageText);
+
+            if (messageData.replyTo) {
+                const replyElement = document.createElement('div');
+                replyElement.classList.add('reply');
+                replyElement.innerHTML = `Replying to: ${filterBadWords(formatMathExpression(messageData.replyTo.message))}`;
+                messageElement.appendChild(replyElement);
+            }
+
+            chatBox.appendChild(messageElement);
+        });
+        chatBox.scrollTop = chatBox.scrollHeight;
+    });
+}
+
+// Typing status
+function listenForTyping() {
+    if (!currentChatRoom) return;
+    typingRef = ref(db, `chatRooms/${currentChatRoom}/typing`);
+    onValue(typingRef, (snapshot) => {
+        const typingData = snapshot.val();
+        document.getElementById('typing-indicator').textContent = typingData && typingData.uid !== currentUser.uid
+            ? "Stranger is typing..."
+            : "";
+    });
+}
+
+// ** New handleTyping function **
+function handleTyping() {
+    if (!currentChatRoom) return;
+    const typingRef = ref(db, `chatRooms/${currentChatRoom}/typing/${currentUser.uid}`);
+    set(typingRef, {
+        uid: currentUser.uid,
+        timestamp: serverTimestamp()
+    });
+    resetInactivityTimer();  // Reset timer on typing activity
+}
+
+// Send message
+function sendMessage() {
+    const chatInput = document.getElementById('chat-input').value;
+    if (chatInput.trim() === '') return;
+
+    const chatMessagesRef = ref(db, `chatRooms/${currentChatRoom}/messages`);
+    const newMessageRef = push(chatMessagesRef);
+
+    set(newMessageRef, {
+        uid: currentUser.uid,
+        message: filterBadWords(formatMathExpression(chatInput)),
+        replyTo: replyMessageId ? { message: replyMessageId } : null,
+        timestamp: serverTimestamp()
+    }).then(() => {
+        document.getElementById('chat-input').value = '';
+        document.getElementById('chat-input').placeholder = 'You: Type a message...';
+        replyMessageId = null;
+        handleTyping();
+        const chatBox = document.getElementById('chat-box');
+        chatBox.scrollTop = chatBox.scrollHeight;
+    }).catch((error) => {
+        console.error("Error sending message:", error);
+    });
+}
+
+// Leave chat room
+async function leaveChatRoom() {
+    if (currentChatRoom) {
+        const chatRoomRef = ref(db, `chatRooms/${currentChatRoom}`);
+        const skipMessageRef = push(ref(db, `chatRooms/${currentChatRoom}/messages`));
+        await set(skipMessageRef, {
+            uid: currentUser.uid,
+            message: "The user has left the chat.",
+            isSystemMessage: true,
+            timestamp: serverTimestamp()
+        });
+
+        setTimeout(async () => {
+            await remove(chatRoomRef);
+            currentChatRoom = null;
+            document.getElementById('chat-box').innerHTML = '';
+            document.getElementById('chat-container').style.display = 'none';
+            alert("You have left the chat.");
+            updateUserStatus('available');
+        }, 500);
+    }
+}
+
+// Format math expressions
+function formatMathExpression(input) {
+    input = input.replace(/\^(\d+)/g, (_, exp) => `<sup>${exp}</sup>`);
+    input = input.replace(/\*/g, '×');
+    input = input.replace(/\//g, '÷');
+    return input;
+}
+
+// Event Listeners
+document.getElementById('new-chat-btn').addEventListener('click', startChat);
+document.getElementById('send-btn').addEventListener('click', sendMessage);
+document.getElementById('skip-btn').addEventListener('click', leaveChatRoom);
+document.getElementById('chat-input').addEventListener('input', handleTyping);
+document.getElementById('chat-input').addEventListener('keydown', (event) => {
+    if (event.key === 'Enter') {
+        event.preventDefault();
+        sendMessage();
+    }
+});
+
+setInterval(() => {
+    document.getElementById('local-time').textContent = new Date().toLocaleTimeString();
+}, 1000);
